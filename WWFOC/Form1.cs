@@ -60,7 +60,7 @@ namespace WWFOC
             DicomFile sourceFile = await DicomFile.OpenAsync(output.SourceFile.FullName);
             using (Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap())
             {
-                ImageProcessor ip = new ImageProcessor(original, DetectionParam1, DetectionParam2, DetectionParam3, debug: true);
+                ImageProcessor ip = new ImageProcessor(original, debug: true);
                 ip.Process();
             }
             
@@ -138,7 +138,7 @@ namespace WWFOC
                         DicomFile sourceFile = await DicomFile.OpenAsync(file.FullName);
                         using (Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap())
                         {
-                            ImageProcessor ip = new ImageProcessor(original, DetectionParam1, DetectionParam2, DetectionParam3);
+                            ImageProcessor ip = new ImageProcessor(original);
                             var result = ip.Process();
                             result.Title = file.Name;
                             result.SourceFile = file;

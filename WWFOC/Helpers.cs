@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Emgu.CV;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
 using Emgu.CV.Util;
 
 namespace WWFOC
@@ -100,6 +102,22 @@ namespace WWFOC
         {
             var circle = CvInvoke.MinEnclosingCircle(contour);
             return circle.Area / CvInvoke.ContourArea(contour);
+        }
+
+        public static double CalculateColorDifference(Image<Gray, byte> cannySource, VectorOfPoint contour, float radiusRatio = 1.3f)
+        {
+            var circle = CvInvoke.MinEnclosingCircle(contour);
+            return AverageColor(cannySource, circle) -
+                   AverageColor(cannySource, new CircleF(circle.Center, circle.Radius * radiusRatio));
+        }
+
+        private static double AverageColor(Image<Gray, byte> cannySource, CircleF circle)
+        {
+            Image<Gray, byte> mask = new Image<Gray, byte>(cannySource.Size);
+            mask.SetZero();
+            CvInvoke.Circle(mask, new Point((int)circle.Center.X, (int)circle.Center.Y), (int)circle.Radius, new MCvScalar(280), 1, LineType.Filled);
+            Image<Gray, byte> masked = cannySource.Copy(mask);
+            return CvInvoke.Mean(masked).V0;
         }
     }
 }

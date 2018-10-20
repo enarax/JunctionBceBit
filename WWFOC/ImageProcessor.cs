@@ -76,13 +76,16 @@ namespace WWFOC
             {
                 g.DrawImage(dil.ToBitmap(), Point.Empty);
                 Pen p = new Pen(Color.Red);
+                p.Width = 2;
                 for (int i = 0; i < contours.Size; i++)
                 {
                     VectorOfPoint contour = contours[i];
                     int[] hierarchyData = Helpers.GetHierarchy(hierarchy, i);
-                    if (CvInvoke.ContourArea(contour) > 50
+                    double contourArea = CvInvoke.ContourArea(contour);
+                    if (contourArea > 200 && contourArea < 10000
                         && hierarchyData[3] == -1 
-                        && Helpers.CalculateCircularity(contour) > 0.5)
+                        && Helpers.CalculateCircularity(contour) > 0.5
+                        && Helpers.CalculateColorDifference(cannySource, contour) > 0)
                     {
                         for (int i2 = 1; i2 < contour.Size; i2++)
                         {

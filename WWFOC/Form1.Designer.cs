@@ -28,25 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.imageHolder = new System.Windows.Forms.Panel();
             this.trackBarP1 = new System.Windows.Forms.TrackBar();
             this.trackBarP2 = new System.Windows.Forms.TrackBar();
             this.trackBarMaxRadius = new System.Windows.Forms.TrackBar();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxRadius)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // imageHolder
-            // 
-            this.imageHolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.imageHolder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.imageHolder.Location = new System.Drawing.Point(12, 64);
-            this.imageHolder.Name = "imageHolder";
-            this.imageHolder.Size = new System.Drawing.Size(705, 512);
-            this.imageHolder.TabIndex = 0;
             // 
             // trackBarP1
             // 
@@ -85,32 +75,40 @@
             this.trackBarMaxRadius.TabIndex = 3;
             this.trackBarMaxRadius.TickFrequency = 20;
             // 
+            // pictureBox
+            // 
+            this.pictureBox.Location = new System.Drawing.Point(12, 64);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(705, 512);
+            this.pictureBox.TabIndex = 4;
+            this.pictureBox.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(729, 588);
+            this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.trackBarMaxRadius);
             this.Controls.Add(this.trackBarP2);
             this.Controls.Add(this.trackBarP1);
-            this.Controls.Add(this.imageHolder);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxRadius)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel imageHolder;
         private System.Windows.Forms.TrackBar trackBarP1;
         private System.Windows.Forms.TrackBar trackBarP2;
         private System.Windows.Forms.TrackBar trackBarMaxRadius;
+        private System.Windows.Forms.PictureBox pictureBox;
     }
 }
 

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AForge;
 using AForge.Imaging;
@@ -21,12 +22,22 @@ namespace WWFOC
 
         public string SourcePath { get; set; } = @"C:\Users\marce\OneDrive\Junction\Dataset2\339663";
         public string SourceFileName = "MR.339663.Image 33.dcm";
+        private Bitmap _imageToDraw;
 
-        public Bitmap ImageToDraw { get; set; }
+        public Bitmap ImageToDraw
+        {
+            get => _imageToDraw;
+            set
+            {
+                _imageToDraw = value;
+                this.Invoke((MethodInvoker)delegate { pictureBox.Image = value; });
+            }
+        }
 
         public int DetectionParam1 { get; set; } = 100;
         public int DetectionParam2 { get; set; } = 100;
         public int DetectionMaxRadius { get; set; } = 0;
+        
         
         
         public Form1()
@@ -36,50 +47,22 @@ namespace WWFOC
             trackBarP2.Value = DetectionParam2;
             trackBarMaxRadius.Value = DetectionMaxRadius;
             Load += OnLoad;
-            imageHolder.Paint += ImageHolderOnPaint;
-            trackBarP1.Scroll += (sender, args) => { DetectionParam1 = trackBarP1.Value; Redraw(); };
-            trackBarP2.Scroll += (sender, args) => { DetectionParam2 = trackBarP2.Value; Redraw(); };
-            trackBarMaxRadius.Scroll += (sender, args) => { DetectionMaxRadius = trackBarMaxRadius.Value; Redraw(); };
-        }
-
-        public void Redraw()
-        {
-            imageHolder.Invalidate();
-        }
-
-        private void ImageHolderOnPaint(object sender, PaintEventArgs e)
-        {
-            float targetHeight = e.Graphics.VisibleClipBounds.Height;
-            float targetWidth = e.Graphics.VisibleClipBounds.Width;
-            e.Graphics.FillRectangle(new SolidBrush(Color.Black), new RectangleF(0, 0, targetWidth, targetHeight));
-            
-            if (ImageToDraw != null)
-            {
-                // resize if needed
-                if (!(Math.Abs(ImageToDraw.Height - targetHeight) < 2) &&
-                    !(Math.Abs(ImageToDraw.Width - targetWidth) < 2))
-                {
-                    float scale = Math.Min(targetWidth / ImageToDraw.Width, targetHeight / ImageToDraw.Height);
-                    var scaleWidth = (int)(ImageToDraw.Width * scale);
-                    var scaleHeight = (int)(ImageToDraw.Height * scale);
-                    e.Graphics.DrawImage(ImageToDraw, ((int)targetWidth - scaleWidth)/2, ((int)targetHeight - scaleHeight)/2, scaleWidth, scaleHeight);
-                }
-                else
-                {
-                    e.Graphics.DrawImage(ImageToDraw, 0, 0);
-                }
-                
-            }
+            trackBarP1.MouseUp += async (sender, args) => { DetectionParam1 = trackBarP1.Value; await UpdateImageAsync(); };
+            trackBarP2.MouseUp += async (sender, args) => { DetectionParam2 = trackBarP2.Value; await UpdateImageAsync(); };
+            trackBarMaxRadius.MouseUp += async (sender, args) => { DetectionMaxRadius = trackBarMaxRadius.Value; await UpdateImageAsync(); };
         }
 
         private async void OnLoad(object sender, EventArgs e)
         {
+            await UpdateImageAsync();
+        }
+
+        private async Task UpdateImageAsync()
+        {
             DicomFile sourceFile = await DicomFile.OpenAsync(Path.Combine(SourcePath, SourceFileName));
             Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap();
-            
-            
-            
-            ImageToDraw = TransformImage(original);
+
+            await Task.Run(() => { ImageToDraw = TransformImage(original); });
         }
 
         private Bitmap TransformImage(Bitmap original)

@@ -119,5 +119,13 @@ namespace WWFOC
             CvInvoke.Circle(mask, new Point((int)circle.Center.X, (int)circle.Center.Y), (int)circle.Radius, new MCvScalar(280), -1, LineType.Filled);
             return CvInvoke.Mean(cannySource, mask).V0;
         }
+
+        public static double ContourColor(Image<Gray, byte> cannySource, VectorOfPoint contour)
+        {
+            Image<Gray, byte> mask = new Image<Gray, byte>(cannySource.Size);
+            mask.SetZero();
+            CvInvoke.FillPoly(mask, new VectorOfVectorOfPoint(contour), new MCvScalar(280));
+            return CvInvoke.Mean(cannySource, mask).V0;
+        }
     }
 }

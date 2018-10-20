@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,12 +12,16 @@ using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
+using MathNet.Numerics.LinearRegression;
 using Point = System.Drawing.Point;
 
 namespace WWFOC
 {
     public class ImageProcessor
     {
+        
+        private bool _positive = false;
+        
         public ImageProcessor(Bitmap source, bool debug = false)
         {
             Source = source;
@@ -32,9 +37,11 @@ namespace WWFOC
             return new ImageProcessorOutput()
             {
                 Images = CreateOutputs(),
-                Title = "Title"
+                Title = "Title",
+                Positive = _positive
             };
         }
+
 
         private IReadOnlyList<ImageOutput> CreateOutputs()
         {
@@ -70,13 +77,13 @@ namespace WWFOC
             return result;
         }
 
-        private static Bitmap DrawFinal(Image<Gray, byte> cannyCv, Image<Gray, byte> colorFilteredCv, Bitmap background)
+        private Bitmap DrawFinal(Image<Gray, byte> cannyCv, Image<Gray, byte> colorFilteredCv, Bitmap background)
         {
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             Mat hierarchy = new Mat();
             CvInvoke.FindContours(cannyCv, contours, hierarchy, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
-            
-            if (contours.Size >= 250) 
+            Histogram hist = new ImageStatistics(colorFilteredCv.Bitmap).Gray;
+            if (contours.Size >= 250 || hist.Median > 50) // Image contains too much noise 
                 return background;
 
             Bitmap bm = new Bitmap(colorFilteredCv.Width, colorFilteredCv.Height);
@@ -96,6 +103,7 @@ namespace WWFOC
                         {
                             if (Helpers.CalculateColorDifference(colorFilteredCv, contour) > 0)
                             {
+                                _positive = true;
                                 for (int i2 = 1; i2 < contour.Size; i2++)
                                 {
                                     Point p1 = contour[i2 - 1];
@@ -108,6 +116,10 @@ namespace WWFOC
                         }
                     }
                 }
+                
+                // line demo
+                //cannyCv.HoughLinesBinary(Math.PI / 180, )
+                
             }
 
             return bm;

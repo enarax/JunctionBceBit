@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AForge.Imaging;
 using Dicom;
 using Dicom.Imaging;
 

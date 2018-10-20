@@ -61,19 +61,21 @@ namespace WWFOC
             
             var medianCv = new Image<Gray, byte>(median);
             var dil = medianCv.Dilate(3);
-            Bitmap dilBitMap = dil.Bitmap.Clone(new Rectangle(Point.Empty, dil.Bitmap.Size), PixelFormat.Format32bppRgb);
+            Bitmap dilBitMap = dil.Bitmap.Clone(new Rectangle(Point.Empty, dil.Bitmap.Size), PixelFormat.Format24bppRgb);
             result.Add(new ImageOutput(dilBitMap, "Dilated"));
 
             var colorFiltered = FilterRange(dilBitMap);
             result.Add(new ImageOutput(colorFiltered, "Color filtered"));
 
-            var colorFilteredCv = new Image<Gray, byte>(colorFiltered);
-            var cannyCv = colorFilteredCv.Canny(280, 80);
-            result.Add(new ImageOutput(cannyCv.ToBitmap(), "Contours"));
+            using (var colorFilteredCv = new Image<Gray, byte>(colorFiltered))
+            using (var cannyCv = colorFilteredCv.Canny(280, 80))
+            {
+                result.Add(new ImageOutput(cannyCv.ToBitmap(), "Contours"));
             
-            Bitmap bm = DrawFinal(cannyCv, colorFilteredCv, image);
+                Bitmap bm = DrawFinal(cannyCv, colorFilteredCv, image);
 
-            result.Add(new ImageOutput(bm, "Final"));
+                result.Add(new ImageOutput(bm, "Final"));
+            }
             return result;
         }
 
@@ -155,8 +157,8 @@ namespace WWFOC
                 InGreen = stat.Green.GetRange(.95)
             };
             SaturationCorrection sc = new SaturationCorrection(-1);
-            Bitmap resized = resize.Apply(sc.Apply(levelsLinear.Apply(image)).MakeGrayscale());
             Bitmap square = new Bitmap(size, size);
+            using(Bitmap resized = resize.Apply(sc.Apply(levelsLinear.Apply(image)).MakeGrayscale()))
             using (Graphics g = Graphics.FromImage(square))
             {
                 g.DrawImage(resized, new Point((size-resized.Width) / 2 ,0));

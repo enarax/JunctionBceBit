@@ -111,8 +111,7 @@ namespace WWFOC
                             }
 
                             ((PictureBox) tabViewer.TabPages[i].Controls[0]).Image =
-                                currentImage.Bitmap.Clone(new RectangleF(PointF.Empty, currentImage.Bitmap.Size),
-                                    PixelFormat.Format32bppRgb);
+                                currentImage.Bitmap;
                         }
                     }
                 }

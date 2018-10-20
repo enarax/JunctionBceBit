@@ -17,22 +17,13 @@ namespace WWFOC
 {
     public class ImageProcessor
     {
-        public ImageProcessor(Bitmap source, int parameter1, int parameter2, int parameter3, bool debug = false)
+        public ImageProcessor(Bitmap source, bool debug = false)
         {
             Source = source;
-            Parameter1 = parameter1;
-            Parameter2 = parameter2;
-            Parameter3 = parameter3;
             Debug = debug;
         }
 
         public Bitmap Source { get; }
-        
-        public int Parameter1 { get; }
-        
-        public int Parameter2 { get; }
-        
-        public int Parameter3 { get; }
 
         public bool Debug { get; }
 
@@ -70,7 +61,7 @@ namespace WWFOC
             result.Add(new ImageOutput(colorFiltered, "Color filtered"));
 
             var colorFilteredCv = new Image<Gray, byte>(colorFiltered);
-            var cannyCv = colorFilteredCv.Canny(Parameter1, Parameter2);
+            var cannyCv = colorFilteredCv.Canny(300, 100);
             result.Add(new ImageOutput(cannyCv.ToBitmap(), "Contours"));
             
             Bitmap bm = DrawFinal(cannyCv, colorFilteredCv, image);

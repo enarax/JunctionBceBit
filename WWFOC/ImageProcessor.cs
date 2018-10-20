@@ -68,7 +68,7 @@ namespace WWFOC
             result.Add(new ImageOutput(colorFiltered, "Color filtered"));
 
             var colorFilteredCv = new Image<Gray, byte>(colorFiltered);
-            var cannyCv = colorFilteredCv.Canny(300, 100);
+            var cannyCv = colorFilteredCv.Canny(280, 80);
             result.Add(new ImageOutput(cannyCv.ToBitmap(), "Contours"));
             
             Bitmap bm = DrawFinal(cannyCv, colorFilteredCv, image);

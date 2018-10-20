@@ -16,5 +16,24 @@ namespace WWFOC
         public IReadOnlyList<Target> Targets { get; set; }
 
         public bool Positive => Targets.Any();
+
+        public bool SignificantlyDifferentFrom(ImageProcessorOutput b)
+        {
+            const int treshold = 10;
+            foreach (Target target in Targets)
+            {
+                if (!b.Targets.Any(
+                    t => GetDistance(t.Center.X, t.Center.Y, target.Center.X, target.Center.Y) < treshold))
+                    return true;
+            }
+
+            return false;
+
+        }
+        
+        private static double GetDistance(double x1, double y1, double x2, double y2)
+        {
+            return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
+        }
     }
 }

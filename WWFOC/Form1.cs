@@ -161,9 +161,10 @@ namespace WWFOC
                 var needRefresh = false;
                 lock (_output)
                 {
+                    int resultIndex = _output.Count;
                     _output.Add(result);
                     Total = _output.Count;
-                    if (result.Positive)
+                    if (result.Positive && (resultIndex == 0 || result.SignificantlyDifferentFrom(_output[resultIndex-1])))
                     {
 
                         string title = result.SourceFile.Name;
@@ -172,7 +173,7 @@ namespace WWFOC
                     }
                     lbl_OoO.Text = $"{Pos}/{Total}";
                     
-                    if (_output.Count-1 == SelectedIndex)
+                    if (resultIndex == SelectedIndex)
                     {
                         needRefresh = true;
                     }

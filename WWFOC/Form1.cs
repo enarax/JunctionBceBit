@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AForge;
@@ -23,12 +24,15 @@ namespace WWFOC
     {
 
         public string SourcePath { get; set; } = @"C:\Users\marce\OneDrive\Junction\Dataset2\339663";
-        public string SourceFileName = "MR.339663.Image 33.dcm";
+        public string SourceFileMask = "MR.*";
 
 
         public int DetectionParam1 { get; set; } = 100;
         public int DetectionParam2 { get; set; } = 100;
-        public int DetectionMaxRadius { get; set; } = 0;
+        public int DetectionParam3 { get; set; } = 0;
+
+        public int SelectedIndex { get; set; }
+        private readonly List<ImageProcessorOutput> _output = new List<ImageProcessorOutput>(); // protected by lock(_output)
         
         
         public Form1()
@@ -36,33 +40,61 @@ namespace WWFOC
             InitializeComponent();
             trackBarP1.Value = DetectionParam1;
             trackBarP2.Value = DetectionParam2;
-            trackBarMaxRadius.Value = DetectionMaxRadius;
+            trackBarMaxRadius.Value = DetectionParam3;
             Load += OnLoad;
             trackBarP1.MouseUp += async (sender, args) => { DetectionParam1 = trackBarP1.Value; await UpdateImageAsync(); };
             trackBarP2.MouseUp += async (sender, args) => { DetectionParam2 = trackBarP2.Value; await UpdateImageAsync(); };
-            trackBarMaxRadius.MouseUp += async (sender, args) => { DetectionMaxRadius = trackBarMaxRadius.Value; await UpdateImageAsync(); };
+            trackBarMaxRadius.MouseUp += async (sender, args) => { DetectionParam3 = trackBarMaxRadius.Value; await UpdateImageAsync(); };
+            this.MouseWheel += OnMouseWheel;
         }
 
-        public void ClearImages()
-        {    
-            Invoke((MethodInvoker) delegate {
-                tabViewer.TabPages.Clear();
-            });
+        private void OnMouseWheel(object sender, MouseEventArgs e)
+        {
+            lock (_output)
+            {
+                SelectedIndex = Math.Min(Math.Max(SelectedIndex + Math.Sign(e.Delta), 0), _output.Count);
+            }
+            RefreshView();
         }
 
-        public void PostImage(Bitmap bm, string title)
+
+        public void RefreshView()
         {
             Invoke((MethodInvoker) delegate
             {
-                TabPage page = new TabPage(title);
-                PictureBox pb = new PictureBox
+                lock (_output)
                 {
-                    Image = bm.Clone(new RectangleF(PointF.Empty, bm.Size), PixelFormat.Format32bppRgb), 
-                    Dock = DockStyle.Fill, 
-                    SizeMode = PictureBoxSizeMode.Zoom
-                };
-                page.Controls.Add(pb);
-                tabViewer.TabPages.Add(page);
+                    if (_output.Count > SelectedIndex)
+                    {
+                        var selectedResult = _output[SelectedIndex];
+                        this.Text = selectedResult.Title;
+                        for (int i = 0; i < selectedResult.Images.Count; i++)
+                        {
+                            var currentImage = selectedResult.Images[i];
+                            if (tabViewer.TabCount <= i)
+                            {
+                                tabViewer.TabPages.Add(new TabPage(currentImage.Title));
+                            }
+                            else
+                            {
+                                tabViewer.TabPages[i].Text = currentImage.Title;
+                            }
+
+                            if (tabViewer.TabPages[i].Controls.Count < 1)
+                            {
+                                tabViewer.TabPages[i].Controls.Add(new PictureBox()
+                                {
+                                    Dock = DockStyle.Fill, 
+                                    SizeMode = PictureBoxSizeMode.Zoom
+                                });
+                            }
+
+                            ((PictureBox) tabViewer.TabPages[i].Controls[0]).Image =
+                                currentImage.Bitmap.Clone(new RectangleF(PointF.Empty, currentImage.Bitmap.Size),
+                                    PixelFormat.Format32bppRgb);
+                        }
+                    }
+                }
             });
         }
 
@@ -73,78 +105,41 @@ namespace WWFOC
 
         private async Task UpdateImageAsync()
         {
-            DicomFile sourceFile = await DicomFile.OpenAsync(Path.Combine(SourcePath, SourceFileName));
-            Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap();
+            var sourceDir = new DirectoryInfo(SourcePath);
+            foreach (FileInfo file in sourceDir.EnumerateFiles(SourceFileMask).OrderBy(f =>
+            {
+                string lastPart = Path.GetFileNameWithoutExtension(f.Name).Split(' ').Last();
+                Int32.TryParse(lastPart, out int index);
+                return index;
+            }))
+            {
+                DicomFile sourceFile = await DicomFile.OpenAsync(file.FullName);
+                Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap();
+                
+                ImageProcessor ip = new ImageProcessor(original, DetectionParam1, DetectionParam2, DetectionParam3);
 
-            ClearImages();
-            await Task.Run(() => { 
-                TransformImage(original);
-            });
+                var needRefresh = false;
+                await Task.Run(() => { 
+                    var result = ip.Process();
+                    result.Title = file.Name;
+                    lock (_output)
+                    {
+                        _output.Add(result);
+                        if (_output.Count-1 == SelectedIndex)
+                        {
+                            needRefresh = true;
+                        }
+                    }
+                });
+                if (needRefresh)
+                {
+                    RefreshView();
+                }
+            }
+            
             tabViewer.SelectedIndex = tabViewer.TabCount - 1;
         }
 
-        private void TransformImage(Bitmap original)
-        {
-            Bitmap image = CreateGrayscale(original);
-            PostImage(image, "Greyscale");
-            /*ComplexImage ci = ComplexImage.FromBitmap(image);
-            ci.ForwardFourierTransform();
-            FrequencyFilter ff = new FrequencyFilter(new IntRange(10, Int32.MaxValue));
-            ff.Apply(ci);
-            ci.BackwardFourierTransform();
-            image = ci.ToBitmap();*/
-            
-            
-            image = new Median(2).Apply(image);
-            PostImage(image, "Median");
-
-            image = Detect(image);
-
-            PostImage(image, "Final");
-        }
-
-        private Bitmap Detect(Bitmap image)
-        {
-            var inputArray = new Image<Gray, byte>(image);
-            VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
-            Mat hierarchy = new Mat();
-            var dil = inputArray.Dilate(3);
-            PostImage(dil.ToBitmap(), "Dilated");
-            dil = dil.Canny(DetectionParam1, DetectionParam2);
-            PostImage(dil.ToBitmap(), "Contours");
-            CvInvoke.FindContours(dil, contours, hierarchy, RetrType.List, ChainApproxMethod.ChainApproxSimple);
-            
-            Bitmap bm = new Bitmap(image.Width, image.Height);
-            using (Graphics g = Graphics.FromImage(bm))
-            {
-                g.DrawImage(dil.ToBitmap(), Point.Empty);
-                Pen p = new Pen(Color.Red);
-                foreach (Point[] contour in contours.ToArrayOfArray()    )
-                {
-                    for (int i = 1; i < contour.Length; i++)
-                    {
-                        Point p1 = contour[i - 1];
-                        Point p2 = contour[i];
-                        g.DrawLine(p, p1, p2);
-                    }
-                }
-            }
-
-            return bm;
-        }
-
-        private static Bitmap CreateGrayscale(Bitmap original)
-        {
-            
-            ImageStatistics stat = new ImageStatistics( original );
-            LevelsLinear levelsLinear = new LevelsLinear();
-            levelsLinear.Output = new IntRange(0, 255);
-            levelsLinear.InRed = stat.Red.GetRange(.95);
-            levelsLinear.InBlue = stat.Blue.GetRange(.95);
-            levelsLinear.InGreen = stat.Green.GetRange(.95);
-            SaturationCorrection sc = new SaturationCorrection(-1);
-            Bitmap image = sc.Apply(levelsLinear.Apply(original)).MakeGrayscale();
-            return image;
-        }
+        
     }
 }

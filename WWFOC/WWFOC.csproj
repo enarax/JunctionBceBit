@@ -102,6 +102,9 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers.cs" />
+    <Compile Include="ImageOutput.cs" />
+    <Compile Include="ImageProcessor.cs" />
+    <Compile Include="ImageProcessorOutput.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

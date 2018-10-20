@@ -101,13 +101,14 @@ namespace WWFOC
         public static double CalculateCircularity(VectorOfPoint contour)
         {
             var circle = CvInvoke.MinEnclosingCircle(contour);
-            return circle.Area / CvInvoke.ContourArea(contour);
+            double contourArea = CvInvoke.ContourArea(contour);
+            return 1 - ((circle.Area - contourArea) / circle.Area);
         }
 
-        public static double CalculateColorDifference(Image<Gray, byte> cannySource, VectorOfPoint contour, float radiusRatio = 1.3f)
+        public static double CalculateColorDifference(Image<Gray, byte> cannySource, VectorOfPoint contour, float radiusRatio = 1.1f)
         {
             var circle = CvInvoke.MinEnclosingCircle(contour);
-            return AverageColor(cannySource, circle) -
+            return AverageColor(cannySource, new CircleF(circle.Center, circle.Radius / radiusRatio)) -
                    AverageColor(cannySource, new CircleF(circle.Center, circle.Radius * radiusRatio));
         }
 
@@ -115,9 +116,8 @@ namespace WWFOC
         {
             Image<Gray, byte> mask = new Image<Gray, byte>(cannySource.Size);
             mask.SetZero();
-            CvInvoke.Circle(mask, new Point((int)circle.Center.X, (int)circle.Center.Y), (int)circle.Radius, new MCvScalar(280), 1, LineType.Filled);
-            Image<Gray, byte> masked = cannySource.Copy(mask);
-            return CvInvoke.Mean(masked).V0;
+            CvInvoke.Circle(mask, new Point((int)circle.Center.X, (int)circle.Center.Y), (int)circle.Radius, new MCvScalar(280), -1, LineType.Filled);
+            return CvInvoke.Mean(cannySource, mask).V0;
         }
     }
 }

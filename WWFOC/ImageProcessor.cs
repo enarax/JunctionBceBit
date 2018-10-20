@@ -66,17 +66,17 @@ namespace WWFOC
             Bitmap dilBitMap = dil.Bitmap.Clone(new Rectangle(Point.Empty, dil.Bitmap.Size), PixelFormat.Format32bppRgb);
             result.Add(new ImageOutput(dilBitMap, "Dilated"));
 
-            image = FilterRange(dilBitMap);
-            result.Add(new ImageOutput(image, "Color filtered"));
+            var colorFiltered = FilterRange(dilBitMap);
+            result.Add(new ImageOutput(colorFiltered, "Color filtered"));
 
-            var cannySource = new Image<Gray, byte>(image);
-            cannySource = cannySource.Canny(Parameter1, Parameter2);
-            result.Add(new ImageOutput(cannySource.ToBitmap(), "Contours"));
+            var colorFilteredCv = new Image<Gray, byte>(colorFiltered);
+            var cannyCv = colorFilteredCv.Canny(Parameter1, Parameter2);
+            result.Add(new ImageOutput(cannyCv.ToBitmap(), "Contours"));
             
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
-            CvInvoke.FindContours(cannySource, contours, hierarchy, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
+            CvInvoke.FindContours(cannyCv, contours, hierarchy, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
                         
-            Bitmap bm = new Bitmap(image.Width, image.Height);
+            Bitmap bm = new Bitmap(colorFiltered.Width, colorFiltered.Height);
             using (Graphics g = Graphics.FromImage(bm))
             {
                 g.DrawImage(dil.ToBitmap(), Point.Empty);
@@ -90,7 +90,7 @@ namespace WWFOC
                     if (contourArea > 200 && contourArea < 10000
                         && hierarchyData[3] == -1 
                         && Helpers.CalculateCircularity(contour) > 0.5
-                        && Helpers.CalculateColorDifference(cannySource, contour) > 0)
+                        && Helpers.CalculateColorDifference(colorFilteredCv, contour) > 0)
                     {
                         for (int i2 = 1; i2 < contour.Size; i2++)
                         {

@@ -27,7 +27,7 @@ namespace WWFOC
         public string SourceFileMask = "MR.*";
 
 
-        public int DetectionParam1 { get; set; } = 100;
+        public int DetectionParam1 { get; set; } = 300;
         public int DetectionParam2 { get; set; } = 100;
         public int DetectionParam3 { get; set; } = 0;
 

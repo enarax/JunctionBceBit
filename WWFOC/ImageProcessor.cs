@@ -56,9 +56,8 @@ namespace WWFOC
             result.Add(new ImageOutput(image, "Median"));
             
             var inputArray = new Image<Gray, byte>(image);
-            VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             Mat hierarchy = new Mat();
-            var dil = inputArray.Dilate(4);
+            var dil = inputArray.Dilate(2);
             Bitmap dilBitMap = dil.Bitmap.Clone(new Rectangle(Point.Empty, dil.Bitmap.Size), PixelFormat.Format32bppRgb);
             result.Add(new ImageOutput(dilBitMap, "Dilated"));
 
@@ -69,21 +68,30 @@ namespace WWFOC
             cannySource = cannySource.Canny(Parameter1, Parameter2);
             result.Add(new ImageOutput(cannySource.ToBitmap(), "Contours"));
             
-            CvInvoke.FindContours(dil, contours, hierarchy, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+            VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
+            CvInvoke.FindContours(cannySource, contours, hierarchy, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
             
             Bitmap bm = new Bitmap(image.Width, image.Height);
             using (Graphics g = Graphics.FromImage(bm))
             {
                 g.DrawImage(dil.ToBitmap(), Point.Empty);
                 Pen p = new Pen(Color.Red);
-                foreach (Point[] contour in contours.ToArrayOfArray())
+                for (int i = 0; i < contours.Size; i++)
                 {
-                    for (int i = 1; i < contour.Length; i++)
+                    VectorOfPoint contour = contours[i];
+                    int[] hierarchyData = Helpers.GetHierarchy(hierarchy, i);
+                    if (CvInvoke.ContourArea(contour) > 50
+                        && hierarchyData[3] == -1 
+                        && Helpers.CalculateCircularity(contour) > 0.5)
                     {
-                        Point p1 = contour[i - 1];
-                        Point p2 = contour[i];
-                        g.DrawLine(p, p1, p2);
+                        for (int i2 = 1; i2 < contour.Size; i2++)
+                        {
+                            Point p1 = contour[i2 - 1];
+                            Point p2 = contour[i2];
+                            g.DrawLine(p, p1, p2);
+                        }
                     }
+                    
                 }
             }
             

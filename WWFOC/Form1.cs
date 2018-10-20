@@ -23,7 +23,7 @@ namespace WWFOC
     public partial class Form1 : Form
     {
 
-        public string SourcePath { get; set; } = @"C:\Users\marce\OneDrive\Junction\Dataset2\386801";
+        public string SourcePath { get; set; } = @"C:\Users\Benke Sándor\Documents\Junction\Dataset\386801";
         public string SourceFileMask = "MR.*";
 
 
@@ -38,13 +38,9 @@ namespace WWFOC
         public Form1()
         {
             InitializeComponent();
-            trackBarP1.Value = DetectionParam1;
-            trackBarP2.Value = DetectionParam2;
-            trackBarMaxRadius.Value = DetectionParam3;
+           
             Load += OnLoad;
-            trackBarP1.MouseUp += async (sender, args) => { DetectionParam1 = trackBarP1.Value; await UpdateImageAsync(); };
-            trackBarP2.MouseUp += async (sender, args) => { DetectionParam2 = trackBarP2.Value; await UpdateImageAsync(); };
-            trackBarMaxRadius.MouseUp += async (sender, args) => { DetectionParam3 = trackBarMaxRadius.Value; await UpdateImageAsync(); };
+            
             this.MouseWheel += OnMouseWheel;
             buttonDebug.Click += ButtonDebugOnClick;
         }

@@ -75,8 +75,8 @@ namespace WWFOC
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             Mat hierarchy = new Mat();
             CvInvoke.FindContours(cannyCv, contours, hierarchy, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
-            
-            if (contours.Size >= 250) 
+            Histogram hist = new ImageStatistics(colorFilteredCv.Bitmap).Gray;
+            if (contours.Size >= 250 || hist.Median > 50) // Image contains too much noise 
                 return background;
 
             Bitmap bm = new Bitmap(colorFilteredCv.Width, colorFilteredCv.Height);

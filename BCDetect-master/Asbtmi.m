@@ -1,3 +1,4 @@
+pkg load image;
 clc;
 clear all;
 close all;
@@ -10,7 +11,13 @@ s=imread(str);
     option = 2;
     %disp('Preprocessing image please wait . . .');
     ad = anisodiff(s,num_iter,delta_t,kappa,option);
-    figure, subplot 121, imshow(s,[]),title('Input image'), subplot 122, imshow(ad,[]),title('Fitered image'),l1=30;l2=37;l3=40;l4=42;q1=53;q2=39;q3=36;q4=40;z1=26;z2=16;z3=53;z4=60;
+    figure;
+    subplot(1,2,1);
+    imshow(s,[]);
+    title('Input image');
+    subplot(1,2,2);
+    imshow(ad,[]);
+    title('Fitered image'),l1=30;l2=37;l3=40;l4=42;q1=53;q2=39;q3=36;q4=40;z1=26;z2=16;z3=53;z4=60;
    
 % fprintf('\nPress any key \n');
 %pause;

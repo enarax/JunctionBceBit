@@ -13,6 +13,7 @@ using Dicom.Imaging;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using Emgu.CV.Util;
 using Point = System.Drawing.Point;
 
 namespace WWFOC
@@ -86,16 +87,25 @@ namespace WWFOC
         private Bitmap Detect(Bitmap image)
         {
             var inputArray = new Image<Gray, byte>(image);
-            var circles = CvInvoke.HoughCircles(inputArray, HoughType.Gradient, 1, 5, DetectionParam1, DetectionParam2, 0, maxRadius: DetectionMaxRadius);
+            VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
+            Mat hierarchy = new Mat();
+            var dil = inputArray.Dilate(3);
+            dil = dil.Canny(DetectionParam1, DetectionParam2);
+            CvInvoke.FindContours(dil, contours, hierarchy, RetrType.List, ChainApproxMethod.ChainApproxSimple);
             
             Bitmap bm = new Bitmap(image.Width, image.Height);
             using (Graphics g = Graphics.FromImage(bm))
             {
-                g.DrawImage(image, Point.Empty);
+                g.DrawImage(dil.ToBitmap(), Point.Empty);
                 Pen p = new Pen(Color.Red);
-                foreach (CircleF circleF in circles)
+                foreach (Point[] contour in contours.ToArrayOfArray()    )
                 {
-                    g.DrawEllipse(p, circleF.Center.X-circleF.Radius, circleF.Center.Y-circleF.Radius, circleF.Radius*2, circleF.Radius*2);
+                    for (int i = 1; i < contour.Length; i++)
+                    {
+                        Point p1 = contour[i - 1];
+                        Point p2 = contour[i];
+                        g.DrawLine(p, p1, p2);
+                    }
                 }
             }
 

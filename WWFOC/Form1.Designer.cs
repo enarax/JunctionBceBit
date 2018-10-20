@@ -42,7 +42,7 @@
             // 
             this.trackBarP1.LargeChange = 10;
             this.trackBarP1.Location = new System.Drawing.Point(22, 13);
-            this.trackBarP1.Maximum = 200;
+            this.trackBarP1.Maximum = 400;
             this.trackBarP1.Minimum = 10;
             this.trackBarP1.Name = "trackBarP1";
             this.trackBarP1.Size = new System.Drawing.Size(172, 45);
@@ -55,7 +55,7 @@
             // 
             this.trackBarP2.LargeChange = 10;
             this.trackBarP2.Location = new System.Drawing.Point(200, 12);
-            this.trackBarP2.Maximum = 200;
+            this.trackBarP2.Maximum = 400;
             this.trackBarP2.Minimum = 10;
             this.trackBarP2.Name = "trackBarP2";
             this.trackBarP2.Size = new System.Drawing.Size(172, 45);

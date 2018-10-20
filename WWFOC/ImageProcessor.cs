@@ -51,13 +51,13 @@ namespace WWFOC
             ci.BackwardFourierTransform();
             image = ci.ToBitmap();*/
             
-            image = new Median(2).Apply(image);
+            image = new Median(5).Apply(image);
             result.Add(new ImageOutput(image, "Median"));
             
             var inputArray = new Image<Gray, byte>(image);
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             Mat hierarchy = new Mat();
-            var dil = inputArray.Dilate(3);
+            var dil = inputArray.Dilate(4);
             result.Add(new ImageOutput(dil.ToBitmap(), "Dilated"));
             
             dil = dil.Canny(Parameter1, Parameter2);

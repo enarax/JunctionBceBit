@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using AForge;
 using AForge.Imaging;
@@ -58,19 +59,24 @@ namespace WWFOC
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             Mat hierarchy = new Mat();
             var dil = inputArray.Dilate(4);
-            result.Add(new ImageOutput(dil.ToBitmap(), "Dilated"));
+            Bitmap dilBitMap = dil.Bitmap.Clone(new Rectangle(Point.Empty, dil.Bitmap.Size), PixelFormat.Format32bppRgb);
+            result.Add(new ImageOutput(dilBitMap, "Dilated"));
+
+            image = FilterRange(dilBitMap);
+            result.Add(new ImageOutput(image, "Color filtered"));
+
+            var cannySource = new Image<Gray, byte>(image);
+            cannySource = cannySource.Canny(Parameter1, Parameter2);
+            result.Add(new ImageOutput(cannySource.ToBitmap(), "Contours"));
             
-            dil = dil.Canny(Parameter1, Parameter2);
-            result.Add(new ImageOutput(dil.ToBitmap(), "Contours"));
-            
-            CvInvoke.FindContours(dil, contours, hierarchy, RetrType.List, ChainApproxMethod.ChainApproxSimple);
+            CvInvoke.FindContours(dil, contours, hierarchy, RetrType.External, ChainApproxMethod.ChainApproxSimple);
             
             Bitmap bm = new Bitmap(image.Width, image.Height);
             using (Graphics g = Graphics.FromImage(bm))
             {
                 g.DrawImage(dil.ToBitmap(), Point.Empty);
                 Pen p = new Pen(Color.Red);
-                foreach (Point[] contour in contours.ToArrayOfArray()    )
+                foreach (Point[] contour in contours.ToArrayOfArray())
                 {
                     for (int i = 1; i < contour.Length; i++)
                     {
@@ -84,8 +90,17 @@ namespace WWFOC
             result.Add(new ImageOutput(bm, "Final"));
             return result;
         }
-        
-        
+
+        private Bitmap FilterRange(Bitmap image)
+        {
+            ContrastCorrection cc = new ContrastCorrection(20);
+            LevelsLinear ll = new LevelsLinear
+            {
+                Input = new IntRange(50, 200),
+                Output = new IntRange(0, 255)
+            };
+            return ll.Apply(cc.Apply(image));
+        }
         
         private static Bitmap CreateGrayscale(Bitmap original)
         {

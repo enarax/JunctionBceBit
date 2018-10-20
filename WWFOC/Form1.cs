@@ -23,7 +23,7 @@ namespace WWFOC
     public partial class Form1 : Form
     {
 
-        public string SourcePath { get; set; } = @"C:\Users\marce\OneDrive\Junction\Dataset2\339663";
+        public string SourcePath { get; set; } = @"C:\Users\marce\OneDrive\Junction\Dataset2\345923";
         public string SourceFileMask = "MR.*";
 
 

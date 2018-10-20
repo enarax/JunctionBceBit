@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,5 +11,7 @@ namespace WWFOC
         public string Title { get; set; }
 
         public IReadOnlyList<ImageOutput> Images { get; set; }
+
+        public Boolean Positive { get; set; }
     }
 }

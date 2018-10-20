@@ -70,7 +70,7 @@ namespace WWFOC
             
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             CvInvoke.FindContours(cannySource, contours, hierarchy, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
-            
+                        
             Bitmap bm = new Bitmap(image.Width, image.Height);
             using (Graphics g = Graphics.FromImage(bm))
             {
@@ -93,6 +93,7 @@ namespace WWFOC
                             Point p2 = contour[i2];
                             g.DrawLine(p, p1, p2);
                         }
+                        g.DrawLine(p, contour[0], contour[contour.Size-1]);
                     }
                     
                 }

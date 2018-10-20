@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -23,22 +24,11 @@ namespace WWFOC
 
         public string SourcePath { get; set; } = @"C:\Users\marce\OneDrive\Junction\Dataset2\339663";
         public string SourceFileName = "MR.339663.Image 33.dcm";
-        private Bitmap _imageToDraw;
 
-        public Bitmap ImageToDraw
-        {
-            get => _imageToDraw;
-            set
-            {
-                _imageToDraw = value;
-                this.Invoke((MethodInvoker)delegate { pictureBox.Image = value; });
-            }
-        }
 
         public int DetectionParam1 { get; set; } = 100;
         public int DetectionParam2 { get; set; } = 100;
         public int DetectionMaxRadius { get; set; } = 0;
-        
         
         
         public Form1()
@@ -53,6 +43,29 @@ namespace WWFOC
             trackBarMaxRadius.MouseUp += async (sender, args) => { DetectionMaxRadius = trackBarMaxRadius.Value; await UpdateImageAsync(); };
         }
 
+        public void ClearImages()
+        {    
+            Invoke((MethodInvoker) delegate {
+                tabViewer.TabPages.Clear();
+            });
+        }
+
+        public void PostImage(Bitmap bm, string title)
+        {
+            Invoke((MethodInvoker) delegate
+            {
+                TabPage page = new TabPage(title);
+                PictureBox pb = new PictureBox
+                {
+                    Image = bm.Clone(new RectangleF(PointF.Empty, bm.Size), PixelFormat.Format32bppRgb), 
+                    Dock = DockStyle.Fill, 
+                    SizeMode = PictureBoxSizeMode.Zoom
+                };
+                page.Controls.Add(pb);
+                tabViewer.TabPages.Add(page);
+            });
+        }
+
         private async void OnLoad(object sender, EventArgs e)
         {
             await UpdateImageAsync();
@@ -63,12 +76,17 @@ namespace WWFOC
             DicomFile sourceFile = await DicomFile.OpenAsync(Path.Combine(SourcePath, SourceFileName));
             Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap();
 
-            await Task.Run(() => { ImageToDraw = TransformImage(original); });
+            ClearImages();
+            await Task.Run(() => { 
+                TransformImage(original);
+            });
+            tabViewer.SelectedIndex = tabViewer.TabCount - 1;
         }
 
-        private Bitmap TransformImage(Bitmap original)
+        private void TransformImage(Bitmap original)
         {
             Bitmap image = CreateGrayscale(original);
+            PostImage(image, "Greyscale");
             /*ComplexImage ci = ComplexImage.FromBitmap(image);
             ci.ForwardFourierTransform();
             FrequencyFilter ff = new FrequencyFilter(new IntRange(10, Int32.MaxValue));
@@ -77,11 +95,12 @@ namespace WWFOC
             image = ci.ToBitmap();*/
             
             
-            new Median(2).ApplyInPlace(image);
+            image = new Median(2).Apply(image);
+            PostImage(image, "Median");
 
             image = Detect(image);
 
-            return image;
+            PostImage(image, "Final");
         }
 
         private Bitmap Detect(Bitmap image)
@@ -90,7 +109,9 @@ namespace WWFOC
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             Mat hierarchy = new Mat();
             var dil = inputArray.Dilate(3);
+            PostImage(dil.ToBitmap(), "Dilated");
             dil = dil.Canny(DetectionParam1, DetectionParam2);
+            PostImage(dil.ToBitmap(), "Contours");
             CvInvoke.FindContours(dil, contours, hierarchy, RetrType.List, ChainApproxMethod.ChainApproxSimple);
             
             Bitmap bm = new Bitmap(image.Width, image.Height);
@@ -108,8 +129,6 @@ namespace WWFOC
                     }
                 }
             }
-
-            
 
             return bm;
         }

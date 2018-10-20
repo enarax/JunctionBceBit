@@ -31,11 +31,13 @@
             this.trackBarP1 = new System.Windows.Forms.TrackBar();
             this.trackBarP2 = new System.Windows.Forms.TrackBar();
             this.trackBarMaxRadius = new System.Windows.Forms.TrackBar();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.tabViewer = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxRadius)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.tabViewer.SuspendLayout();
             this.SuspendLayout();
             // 
             // trackBarP1
@@ -75,20 +77,45 @@
             this.trackBarMaxRadius.TabIndex = 3;
             this.trackBarMaxRadius.TickFrequency = 20;
             // 
-            // pictureBox
+            // tabViewer
             // 
-            this.pictureBox.Location = new System.Drawing.Point(12, 64);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(705, 512);
-            this.pictureBox.TabIndex = 4;
-            this.pictureBox.TabStop = false;
+            this.tabViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabViewer.Controls.Add(this.tabPage1);
+            this.tabViewer.Controls.Add(this.tabPage2);
+            this.tabViewer.Location = new System.Drawing.Point(0, 75);
+            this.tabViewer.Name = "tabViewer";
+            this.tabViewer.SelectedIndex = 0;
+            this.tabViewer.Size = new System.Drawing.Size(729, 513);
+            this.tabViewer.TabIndex = 4;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(721, 487);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(721, 487);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(729, 588);
-            this.Controls.Add(this.pictureBox);
+            this.Controls.Add(this.tabViewer);
             this.Controls.Add(this.trackBarMaxRadius);
             this.Controls.Add(this.trackBarP2);
             this.Controls.Add(this.trackBarP1);
@@ -98,7 +125,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxRadius)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            this.tabViewer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -108,7 +135,9 @@
         private System.Windows.Forms.TrackBar trackBarP1;
         private System.Windows.Forms.TrackBar trackBarP2;
         private System.Windows.Forms.TrackBar trackBarMaxRadius;
-        private System.Windows.Forms.PictureBox pictureBox;
+        private System.Windows.Forms.TabControl tabViewer;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
     }
 }
 

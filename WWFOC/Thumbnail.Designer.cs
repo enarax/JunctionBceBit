@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pbx_image = new System.Windows.Forms.PictureBox();
             this.lbl_text = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbx_image)).BeginInit();
             this.SuspendLayout();
             // 
@@ -38,19 +40,20 @@
             this.pbx_image.Location = new System.Drawing.Point(3, 3);
             this.pbx_image.Name = "pbx_image";
             this.pbx_image.Size = new System.Drawing.Size(220, 183);
+            this.pbx_image.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbx_image.TabIndex = 0;
             this.pbx_image.TabStop = false;
             // 
             // lbl_text
             // 
-            this.lbl_text.Font = new System.Drawing.Font("Segoe UI Emoji", 11.8F);
+            this.lbl_text.Font = new System.Drawing.Font("Segoe UI Emoji", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_text.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
             this.lbl_text.Location = new System.Drawing.Point(3, 189);
             this.lbl_text.Name = "lbl_text";
             this.lbl_text.Size = new System.Drawing.Size(223, 32);
             this.lbl_text.TabIndex = 3;
             this.lbl_text.Text = "_filename";
-            this.lbl_text.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_text.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Thumbnail
             // 
@@ -69,5 +72,6 @@
 
         private System.Windows.Forms.PictureBox pbx_image;
         private System.Windows.Forms.Label lbl_text;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

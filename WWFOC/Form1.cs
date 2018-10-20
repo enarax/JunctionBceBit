@@ -135,7 +135,7 @@ namespace WWFOC
                     });
 
                 }).ToList();
-            
+            int szam = 0;
             foreach (var resultTask in resultTasks)
             {
                 var result = await resultTask;
@@ -143,6 +143,18 @@ namespace WWFOC
                 lock (_output)
                 {
                     _output.Add(result);
+                    if (result.Positive)
+                    {
+                        System.Drawing.Image thumbnail = result.Images.Last().Bitmap;
+                        string title = result.SourceFile.Name;
+                        
+                        Thumbnail thbn = new Thumbnail(thumbnail, title);
+                        
+                        thbn.Top = szam * thbn.Height;
+                        szam++;
+                        listBox1.Items.Add(title);
+                        //pnl_Thbn.Controls.Add(thbn);
+                    }
                     if (_output.Count-1 == SelectedIndex)
                     {
                         needRefresh = true;
@@ -153,18 +165,26 @@ namespace WWFOC
                     RefreshView();
                 }
             }
+
         }
 
         private void LoadThumbs()
         {
-            /*
+            
             foreach (ImageProcessorOutput positiveOutput in _output.Where(o => o.Positive))
             {
                 System.Drawing.Image thumbnail = positiveOutput.Images.Last().Bitmap;
                 string title = positiveOutput.SourceFile.Name;
+                Thumbnail thbn = new Thumbnail(thumbnail, title);
+                //pnl_Thbn.Controls.Add(thbn);
+                //thbn.Top = index * thbn.Height;
+            }
 
-            }*/
+        }
 
+        private void btn_close_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

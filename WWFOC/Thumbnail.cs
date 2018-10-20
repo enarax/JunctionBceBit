@@ -17,7 +17,7 @@ namespace WWFOC
             InitializeComponent();
             pbx_image.Image = Img;
             lbl_text.Text = Filename;
-
+            toolTip1.SetToolTip(lbl_text, Filename);
         }
     }
 }

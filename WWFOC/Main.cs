@@ -45,8 +45,10 @@ namespace WWFOC
           
 
             Form1 frm = new Form1(FilePath);
-            frm.ShowDialog();
             this.Hide();
+            frm.ShowDialog();
+            this.Show();
+            
 
         }
     }

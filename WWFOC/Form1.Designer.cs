@@ -36,9 +36,9 @@
             this.btn_close = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.pnl_Thbn = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabViewer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -51,7 +51,7 @@
             this.tabViewer.Controls.Add(this.tabPage1);
             this.tabViewer.Controls.Add(this.tabPage2);
             this.tabViewer.Location = new System.Drawing.Point(402, 104);
-            this.tabViewer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabViewer.Margin = new System.Windows.Forms.Padding(4);
             this.tabViewer.Name = "tabViewer";
             this.tabViewer.SelectedIndex = 0;
             this.tabViewer.Size = new System.Drawing.Size(764, 528);
@@ -60,9 +60,9 @@
             // tabPage1
             // 
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
             this.tabPage1.Size = new System.Drawing.Size(756, 499);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
@@ -71,10 +71,10 @@
             // tabPage2
             // 
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tabPage2.Size = new System.Drawing.Size(964, 602);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
+            this.tabPage2.Size = new System.Drawing.Size(756, 499);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -82,7 +82,7 @@
             // buttonDebug
             // 
             this.buttonDebug.Location = new System.Drawing.Point(1062, 659);
-            this.buttonDebug.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonDebug.Margin = new System.Windows.Forms.Padding(4);
             this.buttonDebug.Name = "buttonDebug";
             this.buttonDebug.Size = new System.Drawing.Size(100, 28);
             this.buttonDebug.TabIndex = 5;
@@ -101,11 +101,12 @@
             this.btn_close.Size = new System.Drawing.Size(47, 36);
             this.btn_close.TabIndex = 7;
             this.btn_close.UseVisualStyleBackColor = true;
+            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
-            this.panel1.Controls.Add(this.pnl_Thbn);
+            this.panel1.Controls.Add(this.listBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -121,17 +122,6 @@
             this.panel2.Size = new System.Drawing.Size(861, 21);
             this.panel2.TabIndex = 9;
             // 
-            // pnl_Thbn
-            // 
-            this.pnl_Thbn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.pnl_Thbn.AutoScroll = true;
-            this.pnl_Thbn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.pnl_Thbn.Location = new System.Drawing.Point(4, 129);
-            this.pnl_Thbn.Name = "pnl_Thbn";
-            this.pnl_Thbn.Size = new System.Drawing.Size(325, 560);
-            this.pnl_Thbn.TabIndex = 0;
-            // 
             // button2
             // 
             this.button2.FlatAppearance.BorderSize = 0;
@@ -140,7 +130,7 @@
             this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(794, 639);
+            this.button2.Location = new System.Drawing.Point(803, 639);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(55, 55);
             this.button2.TabIndex = 10;
@@ -154,11 +144,20 @@
             this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(707, 639);
+            this.button1.Location = new System.Drawing.Point(701, 639);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(55, 55);
             this.button1.TabIndex = 11;
             this.button1.UseVisualStyleBackColor = true;
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 16;
+            this.listBox1.Location = new System.Drawing.Point(12, 141);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(306, 484);
+            this.listBox1.TabIndex = 0;
             // 
             // Form1
             // 
@@ -192,9 +191,9 @@
         private System.Windows.Forms.Button btn_close;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel pnl_Thbn;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

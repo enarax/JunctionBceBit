@@ -34,6 +34,7 @@
             this.tabViewer = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.buttonDebug = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarP2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxRadius)).BeginInit();
@@ -110,11 +111,21 @@
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // buttonDebug
+            // 
+            this.buttonDebug.Location = new System.Drawing.Point(592, 28);
+            this.buttonDebug.Name = "buttonDebug";
+            this.buttonDebug.Size = new System.Drawing.Size(75, 23);
+            this.buttonDebug.TabIndex = 5;
+            this.buttonDebug.Text = "DEBUG";
+            this.buttonDebug.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(729, 588);
+            this.Controls.Add(this.buttonDebug);
             this.Controls.Add(this.tabViewer);
             this.Controls.Add(this.trackBarMaxRadius);
             this.Controls.Add(this.trackBarP2);
@@ -138,6 +149,7 @@
         private System.Windows.Forms.TabControl tabViewer;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button buttonDebug;
     }
 }
 

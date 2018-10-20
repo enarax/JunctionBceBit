@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -15,12 +16,13 @@ namespace WWFOC
 {
     public class ImageProcessor
     {
-        public ImageProcessor(Bitmap source, int parameter1, int parameter2, int parameter3)
+        public ImageProcessor(Bitmap source, int parameter1, int parameter2, int parameter3, bool debug = false)
         {
             Source = source;
             Parameter1 = parameter1;
             Parameter2 = parameter2;
             Parameter3 = parameter3;
+            Debug = debug;
         }
 
         public Bitmap Source { get; }
@@ -30,6 +32,8 @@ namespace WWFOC
         public int Parameter2 { get; }
         
         public int Parameter3 { get; }
+
+        public bool Debug { get; }
 
         public ImageProcessorOutput Process()
         {
@@ -42,6 +46,7 @@ namespace WWFOC
 
         private IReadOnlyList<ImageOutput> CreateOutputs()
         {
+            
             List<ImageOutput> result = new List<ImageOutput>();
             Bitmap image = CreateGrayscale(Source);
             result.Add(new ImageOutput(image, "Grayscale"));

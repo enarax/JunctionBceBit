@@ -46,6 +46,24 @@ namespace WWFOC
             trackBarP2.MouseUp += async (sender, args) => { DetectionParam2 = trackBarP2.Value; await UpdateImageAsync(); };
             trackBarMaxRadius.MouseUp += async (sender, args) => { DetectionParam3 = trackBarMaxRadius.Value; await UpdateImageAsync(); };
             this.MouseWheel += OnMouseWheel;
+            buttonDebug.Click += ButtonDebugOnClick;
+        }
+
+        private async void ButtonDebugOnClick(object sender, EventArgs e)
+        {
+            lock (_output)
+            {
+                if (_output.Count <= SelectedIndex) return;
+            }
+
+            ImageProcessorOutput output = _output[SelectedIndex];
+            DicomFile sourceFile = await DicomFile.OpenAsync(output.SourceFile.FullName);
+            using (Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap())
+            {
+                ImageProcessor ip = new ImageProcessor(original, DetectionParam1, DetectionParam2, DetectionParam3, debug: true);
+                ip.Process();
+            }
+            
         }
 
         private void OnMouseWheel(object sender, MouseEventArgs e)
@@ -123,6 +141,7 @@ namespace WWFOC
                             ImageProcessor ip = new ImageProcessor(original, DetectionParam1, DetectionParam2, DetectionParam3);
                             var result = ip.Process();
                             result.Title = file.Name;
+                            result.SourceFile = file;
                             return result;
                         }
                     });

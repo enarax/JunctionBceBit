@@ -6,6 +6,7 @@ using System.Linq;
 using AForge;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
+using AForge.Math;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -88,17 +89,21 @@ namespace WWFOC
                     int[] hierarchyData = Helpers.GetHierarchy(hierarchy, i);
                     double contourArea = CvInvoke.ContourArea(contour);
                     if (contourArea > 200 && contourArea < 10000
-                        && hierarchyData[3] == -1 
-                        && Helpers.CalculateCircularity(contour) > 0.5
-                        && Helpers.CalculateColorDifference(colorFilteredCv, contour) > 0)
+                                          && hierarchyData[3] == -1)
                     {
-                        for (int i2 = 1; i2 < contour.Size; i2++)
+                        if (Helpers.CalculateCircularity(contour) > 0.5)
                         {
-                            Point p1 = contour[i2 - 1];
-                            Point p2 = contour[i2];
-                            g.DrawLine(p, p1, p2);
+                            if (Helpers.CalculateColorDifference(colorFilteredCv, contour) > 0)
+                            {
+                                for (int i2 = 1; i2 < contour.Size; i2++)
+                                {
+                                    Point p1 = contour[i2 - 1];
+                                    Point p2 = contour[i2];
+                                    g.DrawLine(p, p1, p2);
+                                }
+                                g.DrawLine(p, contour[0], contour[contour.Size-1]);
+                            }
                         }
-                        g.DrawLine(p, contour[0], contour[contour.Size-1]);
                     }
                     
                 }
@@ -111,12 +116,15 @@ namespace WWFOC
         private Bitmap FilterRange(Bitmap image)
         {
             ContrastCorrection cc = new ContrastCorrection(20);
+            /*ImageStatistics stat = new ImageStatistics( image );
+            Histogram grayhist = stat.Red;
             LevelsLinear ll = new LevelsLinear
             {
                 Input = new IntRange(50, 200),
                 Output = new IntRange(0, 255)
             };
-            return ll.Apply(cc.Apply(image));
+            return ll.Apply(cc.Apply(image));*/
+            return cc.Apply(image);
         }
         
         private static Bitmap CreateGrayscale(Bitmap original)

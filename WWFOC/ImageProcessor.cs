@@ -20,7 +20,7 @@ namespace WWFOC
     public class ImageProcessor
     {
         
-        private bool _positive = false;
+        private readonly List<Target> _targets = new List<Target>();
         
         public ImageProcessor(Bitmap source, bool debug = false)
         {
@@ -38,7 +38,7 @@ namespace WWFOC
             {
                 Images = CreateOutputs(),
                 Title = "Title",
-                Positive = _positive
+                Targets = _targets
             };
         }
 
@@ -56,7 +56,7 @@ namespace WWFOC
             ci.BackwardFourierTransform();
             image = ci.ToBitmap();*/
             
-            var median = new Median(5).Apply(image);
+            var median = new Median(7).Apply(image);
             result.Add(new ImageOutput(median, "Median"));
             
             var medianCv = new Image<Gray, byte>(median);
@@ -96,14 +96,14 @@ namespace WWFOC
                     VectorOfPoint contour = contours[i];
                     int[] hierarchyData = Helpers.GetHierarchy(hierarchy, i);
                     double contourArea = CvInvoke.ContourArea(contour);
-                    if (contourArea > 200 && contourArea < 10000
+                    if (contourArea > 280 && contourArea < 4000
                                           && hierarchyData[3] == -1)
                     {
                         if (Helpers.CalculateCircularity(contour) > 0.45)
                         {
                             if (Helpers.CalculateColorDifference(colorFilteredCv, contour) > 0)
                             {
-                                _positive = true;
+                                _targets.Add(new Target(CvInvoke.MinEnclosingCircle(contour).Center));
                                 for (int i2 = 1; i2 < contour.Size; i2++)
                                 {
                                     Point p1 = contour[i2 - 1];
@@ -139,10 +139,14 @@ namespace WWFOC
             return cc.Apply(image);
         }
         
-        private static Bitmap CreateGrayscale(Bitmap original)
+        private static Bitmap CreateGrayscale(Bitmap image)
         {
             
-            ImageStatistics stat = new ImageStatistics( original );
+            const int size = 512;
+            float scale = Math.Min(size / (float)image.Width, size / (float)image.Height);
+            ResizeBicubic resize = new ResizeBicubic((int)(image.Width*scale), (int)(image.Height*scale));
+            
+            ImageStatistics stat = new ImageStatistics( image );
             LevelsLinear levelsLinear = new LevelsLinear
             {
                 Output = new IntRange(0, 255),
@@ -151,8 +155,14 @@ namespace WWFOC
                 InGreen = stat.Green.GetRange(.95)
             };
             SaturationCorrection sc = new SaturationCorrection(-1);
-            Bitmap image = sc.Apply(levelsLinear.Apply(original)).MakeGrayscale();
-            return image;
+            Bitmap resized = resize.Apply(sc.Apply(levelsLinear.Apply(image)).MakeGrayscale());
+            Bitmap square = new Bitmap(size, size);
+            using (Graphics g = Graphics.FromImage(square))
+            {
+                g.DrawImage(resized, new Point((size-resized.Width) / 2 ,0));
+            }
+            
+            return square;
         }
     }
 }

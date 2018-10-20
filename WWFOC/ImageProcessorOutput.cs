@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace WWFOC
 {
@@ -12,6 +13,8 @@ namespace WWFOC
 
         public IReadOnlyList<ImageOutput> Images { get; set; }
 
-        public Boolean Positive { get; set; }
+        public IReadOnlyList<Target> Targets { get; set; }
+
+        public bool Positive => Targets.Any();
     }
 }

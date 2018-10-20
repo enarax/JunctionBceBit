@@ -6,24 +6,16 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AForge;
 using AForge.Imaging;
-using AForge.Imaging.ComplexFilters;
-using AForge.Imaging.Filters;
 using Dicom;
 using Dicom.Imaging;
-using Emgu.CV;
-using Emgu.CV.CvEnum;
-using Emgu.CV.Structure;
-using Emgu.CV.Util;
-using Point = System.Drawing.Point;
 
 namespace WWFOC
 {
     public partial class Form1 : Form
     {
 
-        public string SourcePath { get; set; } = @"C:\Users\Benke Sándor\Documents\Junction\Dataset\386801";
+        public string SourcePath { get; } //= @"C:\Users\Benke Sándor\Documents\Junction\Dataset\386801";
         public string SourceFileMask = "MR.*";
 
 
@@ -35,9 +27,10 @@ namespace WWFOC
         private readonly List<ImageProcessorOutput> _output = new List<ImageProcessorOutput>(); // protected by lock(_output)
         
         
-        public Form1()
+        public Form1(string Path)
         {
             InitializeComponent();
+            SourcePath = Path;
            
             Load += OnLoad;
             
@@ -163,6 +156,16 @@ namespace WWFOC
             }
         }
 
-        
+        private void LoadThumbs()
+        {
+            /*
+            foreach (ImageProcessorOutput positiveOutput in _output.Where(o => o.Positive))
+            {
+                System.Drawing.Image thumbnail = positiveOutput.Images.Last().Bitmap;
+                string title = positiveOutput.SourceFile.Name;
+
+            }*/
+
+        }
     }
 }

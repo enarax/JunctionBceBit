@@ -60,7 +60,7 @@ namespace WWFOC
             result.Add(new ImageOutput(median, "Median"));
             
             var medianCv = new Image<Gray, byte>(median);
-            var dil = medianCv.Dilate(2);
+            var dil = medianCv.Dilate(3);
             Bitmap dilBitMap = dil.Bitmap.Clone(new Rectangle(Point.Empty, dil.Bitmap.Size), PixelFormat.Format32bppRgb);
             result.Add(new ImageOutput(dilBitMap, "Dilated"));
 
@@ -99,7 +99,7 @@ namespace WWFOC
                     if (contourArea > 200 && contourArea < 10000
                                           && hierarchyData[3] == -1)
                     {
-                        if (Helpers.CalculateCircularity(contour) > 0.5)
+                        if (Helpers.CalculateCircularity(contour) > 0.45)
                         {
                             if (Helpers.CalculateColorDifference(colorFilteredCv, contour) > 0)
                             {

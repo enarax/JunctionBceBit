@@ -106,38 +106,46 @@ namespace WWFOC
         private async Task UpdateImageAsync()
         {
             var sourceDir = new DirectoryInfo(SourcePath);
-            foreach (FileInfo file in sourceDir.EnumerateFiles(SourceFileMask).OrderBy(f =>
-            {
-                string lastPart = Path.GetFileNameWithoutExtension(f.Name).Split(' ').Last();
-                Int32.TryParse(lastPart, out int index);
-                return index;
-            }))
-            {
-                DicomFile sourceFile = await DicomFile.OpenAsync(file.FullName);
-                Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap();
-                
-                ImageProcessor ip = new ImageProcessor(original, DetectionParam1, DetectionParam2, DetectionParam3);
-
-                var needRefresh = false;
-                await Task.Run(() => { 
-                    var result = ip.Process();
-                    result.Title = file.Name;
-                    lock (_output)
+            IEnumerable<Task<ImageProcessorOutput>> resultTasks = sourceDir.EnumerateFiles(SourceFileMask)
+                .OrderBy(f =>
+                {
+                    string lastPart = Path.GetFileNameWithoutExtension(f.Name).Split(' ').Last();
+                    Int32.TryParse(lastPart, out int index);
+                    return index;
+                })
+                .Select(async file =>
+                {
+                    return await Task.Run(async () =>
                     {
-                        _output.Add(result);
-                        if (_output.Count-1 == SelectedIndex)
+                        DicomFile sourceFile = await DicomFile.OpenAsync(file.FullName);
+                        using (Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap())
                         {
-                            needRefresh = true;
+                            ImageProcessor ip = new ImageProcessor(original, DetectionParam1, DetectionParam2, DetectionParam3);
+                            var result = ip.Process();
+                            result.Title = file.Name;
+                            return result;
                         }
+                    });
+
+                }).ToList();
+            
+            foreach (var resultTask in resultTasks)
+            {
+                var result = await resultTask;
+                var needRefresh = false;
+                lock (_output)
+                {
+                    _output.Add(result);
+                    if (_output.Count-1 == SelectedIndex)
+                    {
+                        needRefresh = true;
                     }
-                });
+                }
                 if (needRefresh)
                 {
                     RefreshView();
                 }
             }
-            
-            tabViewer.SelectedIndex = tabViewer.TabCount - 1;
         }
 
         

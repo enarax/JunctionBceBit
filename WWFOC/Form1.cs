@@ -102,24 +102,24 @@ namespace WWFOC
         public void RefreshView()
         {
             Invoke((MethodInvoker) delegate
+            {lock (_output)
             {
-                lock (_output)
+                if (_output.Count > SelectedIndex)
                 {
-                    if (_output.Count > SelectedIndex)
+                    var selectedResult = _output[SelectedIndex];
+                    this.Text = selectedResult.Title;
+                    for (int i = 0; i < selectedResult.Images.Count; i++)
                     {
-                        var selectedResult = _output[SelectedIndex];
-                        this.Text = selectedResult.Title;
-                        for (int i = 0; i < selectedResult.Images.Count; i++)
+                        var currentImage = selectedResult.Images[i];
+                        if (tabViewer.TabCount <= i)
                         {
-                            var currentImage = selectedResult.Images[i];
-                            if (tabViewer.TabCount <= i)
-                            {
-                                tabViewer.TabPages.Add(new TabPage(currentImage.Title));
-                            }
-                            else
-                            {
-                                tabViewer.TabPages[i].Text = currentImage.Title;
-                            }
+                            tabViewer.TabPages.Add(new TabPage(currentImage.Title));
+                            tabViewer.SelectedIndex = i;
+                        }
+                        else
+                        {
+                            tabViewer.TabPages[i].Text = currentImage.Title;
+                        }
 
                             if (tabViewer.TabPages[i].Controls.Count < 1)
                             {

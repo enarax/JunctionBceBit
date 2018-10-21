@@ -254,7 +254,7 @@
             // 
             // btn_Finished
             // 
-            this.btn_Finished.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.btn_Finished.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_Finished.Enabled = false;
             this.btn_Finished.FlatAppearance.BorderSize = 0;

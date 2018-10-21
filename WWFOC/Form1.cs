@@ -101,8 +101,7 @@ namespace WWFOC
       
         public void RefreshView()
         {
-            Invoke((MethodInvoker) delegate
-            {lock (_output)
+            lock (_output)
             {
                 if (_output.Count > SelectedIndex)
                 {
@@ -121,26 +120,25 @@ namespace WWFOC
                             tabViewer.TabPages[i].Text = currentImage.Title;
                         }
 
-                            if (tabViewer.TabPages[i].Controls.Count < 1)
+                        if (tabViewer.TabPages[i].Controls.Count < 1)
+                        {
+                            tabViewer.TabPages[i].Controls.Add(new PictureBox()
                             {
-                                tabViewer.TabPages[i].Controls.Add(new PictureBox()
-                                {
-                                    Dock = DockStyle.Fill, 
-                                    SizeMode = PictureBoxSizeMode.Zoom
-                                });
-                            }
-
-                            ((PictureBox) tabViewer.TabPages[i].Controls[0]).Image =
-                                currentImage.Bitmap;
+                                Dock = DockStyle.Fill, 
+                                SizeMode = PictureBoxSizeMode.Zoom
+                            });
                         }
-                        
-                        lbl_Filename.Text = _output[SelectedIndex].Title;
-                        lbl_Filename.Show();
-                        tabViewer.Show();
-                       
+
+                        ((PictureBox) tabViewer.TabPages[i].Controls[0]).Image =
+                            currentImage.Bitmap;
                     }
+                    
+                    lbl_Filename.Text = _output[SelectedIndex].Title;
+                    lbl_Filename.Show();
+                    tabViewer.Show();
+                   
                 }
-            });
+            }
         }
 
         private async void OnLoad(object sender, EventArgs e)

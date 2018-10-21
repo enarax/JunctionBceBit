@@ -92,14 +92,8 @@ namespace WWFOC
             {
                 SelectedIndex = Math.Min(Math.Max(SelectedIndex + Math.Sign(e.Delta), 0), _output.Count - 1);
             }
-            for (int i = 0; i < listBox1.Items.Count; i++) //hiba, amikor a legaljára görgetünk
-            {
-                if (listBox1.Items[i].ToString()==_output[SelectedIndex].Title)
-                {
-                    listBox1.SelectedIndex = i;
-                    
-                }
-            }
+
+            listBox1.SelectedIndex = SelectedIndex;
 
             RefreshView();
         }
@@ -217,7 +211,7 @@ namespace WWFOC
             }
         }
 
-        //Eseménykiszolgálók
+        // Event handlers
 
         private void btn_close_Click(object sender, EventArgs e)
         {

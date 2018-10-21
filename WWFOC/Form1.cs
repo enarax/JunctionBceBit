@@ -233,25 +233,9 @@ namespace WWFOC
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int KivIndex = 0;
-            lock (_output)
-            {
-               
-                foreach (var image in _output)
-                {
-                    if (image.Title == listBox1.SelectedItem.ToString())
-                    {
-                        SelectedIndex = KivIndex;
-                        
-                        lbl_Filename.Text = listBox1.SelectedItem.ToString();
-                    }
-                    else
-                    {
-                        KivIndex++;
-                    }
-                }
-                RefreshView();
-            }
+            
+            SelectedIndex = listBox1.SelectedIndex;
+            RefreshView();
             
         }
 

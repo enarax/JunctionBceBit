@@ -46,8 +46,9 @@ namespace WWFOC
         {
             
             List<ImageOutput> result = new List<ImageOutput>();
+            result.Add(new ImageOutput(Source, "Original"));
             Bitmap image = CreateGrayscale(Source);
-            result.Add(new ImageOutput(image, "Grayscale"));
+            result.Add(new ImageOutput(image, "Initial processing"));
             /*ComplexImage ci = ComplexImage.FromBitmap(image);
             ci.ForwardFourierTransform();
             FrequencyFilter ff = new FrequencyFilter(new IntRange(10, Int32.MaxValue));
@@ -56,24 +57,24 @@ namespace WWFOC
             image = ci.ToBitmap();*/
             
             var median = new Median(7).Apply(image);
-            result.Add(new ImageOutput(median, "Median"));
+            result.Add(new ImageOutput(median, "(Median)"));
             
             var medianCv = new Image<Gray, byte>(median);
             var dil = medianCv.Dilate(3);
             Bitmap dilBitMap = dil.Bitmap.Clone(new Rectangle(Point.Empty, dil.Bitmap.Size), PixelFormat.Format24bppRgb);
-            result.Add(new ImageOutput(dilBitMap, "Dilated"));
+            result.Add(new ImageOutput(dilBitMap, "(Dilated)"));
 
             var colorFiltered = FilterRange(dilBitMap);
-            result.Add(new ImageOutput(colorFiltered, "Color filtered"));
+            result.Add(new ImageOutput(colorFiltered, "(Color filtered)"));
 
             using (var colorFilteredCv = new Image<Gray, byte>(colorFiltered))
             using (var cannyCv = colorFilteredCv.Canny(280, 80))
             {
-                result.Add(new ImageOutput(cannyCv.ToBitmap(), "Contours"));
+                result.Add(new ImageOutput(cannyCv.ToBitmap(), "(Contour Map)"));
             
                 Bitmap bm = DrawFinal(cannyCv, colorFilteredCv, image);
 
-                result.Add(new ImageOutput(bm, "Final"));
+                result.Add(new ImageOutput(bm, "Detections"));
             }
             return result;
         }

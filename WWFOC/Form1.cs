@@ -172,8 +172,9 @@ namespace WWFOC
                     return await Task.Run(async () =>
                     {
                         DicomFile sourceFile = await DicomFile.OpenAsync(file.FullName);
-                        using (Bitmap original = new DicomImage(sourceFile.Dataset).RenderImage().AsClonedBitmap())
+                        using (IImage iimage = new DicomImage(sourceFile.Dataset).RenderImage())
                         {
+                            Bitmap original = iimage.AsClonedBitmap();
                             ImageProcessor ip = new ImageProcessor(original);
                             var result = ip.Process();
                             result.SourceFile = file;

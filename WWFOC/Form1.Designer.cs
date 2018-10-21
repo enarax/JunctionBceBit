@@ -45,6 +45,7 @@
             this.lbl_Filename = new System.Windows.Forms.Label();
             this.pnl_Buttons = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
+            this.btn_Finished = new System.Windows.Forms.Button();
             this.tabViewer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.pnl_Buttons.SuspendLayout();
@@ -89,7 +90,7 @@
             // buttonDebug
             // 
             this.buttonDebug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDebug.Location = new System.Drawing.Point(1062, 659);
+            this.buttonDebug.Location = new System.Drawing.Point(848, 659);
             this.buttonDebug.Margin = new System.Windows.Forms.Padding(4);
             this.buttonDebug.Name = "buttonDebug";
             this.buttonDebug.Size = new System.Drawing.Size(100, 28);
@@ -115,6 +116,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
+            this.panel1.Controls.Add(this.btn_Finished);
             this.panel1.Controls.Add(this.lbl_Perc);
             this.panel1.Controls.Add(this.lbl_OoO);
             this.panel1.Controls.Add(this.listBox1);
@@ -157,7 +159,7 @@
             this.listBox1.ItemHeight = 23;
             this.listBox1.Location = new System.Drawing.Point(12, 141);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(306, 556);
+            this.listBox1.Size = new System.Drawing.Size(306, 487);
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             this.listBox1.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.listBox1_ControlAdded);
@@ -250,6 +252,23 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btn_Finished
+            // 
+            this.btn_Finished.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_Finished.Enabled = false;
+            this.btn_Finished.FlatAppearance.BorderSize = 0;
+            this.btn_Finished.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Finished.Font = new System.Drawing.Font("Segoe UI Emoji", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Finished.ForeColor = System.Drawing.Color.White;
+            this.btn_Finished.Location = new System.Drawing.Point(40, 648);
+            this.btn_Finished.Name = "btn_Finished";
+            this.btn_Finished.Size = new System.Drawing.Size(221, 55);
+            this.btn_Finished.TabIndex = 15;
+            this.btn_Finished.Text = "Kész";
+            this.btn_Finished.UseVisualStyleBackColor = true;
+            this.btn_Finished.Click += new System.EventHandler(this.btn_Finished_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -297,6 +316,7 @@
         private System.Windows.Forms.Label lbl_Filename;
         private System.Windows.Forms.Panel pnl_Buttons;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_Finished;
     }
 }
 

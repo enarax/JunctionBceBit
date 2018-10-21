@@ -29,9 +29,10 @@ namespace WWFOC
         public Form1(string Path)
         {
             InitializeComponent();
-            PnlButonsAlign();
+            PnlButtonsAlign();
             buttonDebug.Hide();
             lbl_Filename.Hide();
+            tabViewer.Hide();
             SourcePath = Path;
            
             Load += OnLoad;
@@ -116,6 +117,7 @@ namespace WWFOC
                         
                         lbl_Filename.Text = _output[SelectedIndex].Title;
                         lbl_Filename.Show();
+                        tabViewer.Show();
                     }
                 }
             });
@@ -154,6 +156,7 @@ namespace WWFOC
 
                 }).ToList();
             int Pos = 0;
+            
             foreach (var resultTask in resultTasks)
             {
                 var result = await resultTask;
@@ -234,13 +237,13 @@ namespace WWFOC
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            PnlButonsAlign();
+            PnlButtonsAlign();
         }
 
-        private void PnlButonsAlign()
+        private void PnlButtonsAlign()
         {
             int MainWidth = this.Width - panel1.Width;
-            pnl_Buttons.Left = MainWidth / 2 - pnl_Buttons.Width / 2;
+            pnl_Buttons.Left = (MainWidth / 2) - (pnl_Buttons.Width / 2);
         }
     }
 }

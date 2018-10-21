@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dicom;
@@ -157,7 +158,7 @@ namespace WWFOC
 
         private async Task UpdateImageAsync()
         {
-
+            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
             var sourceDir = new DirectoryInfo(SourcePath);
             IEnumerable<Task<ImageProcessorOutput>> resultTasks = sourceDir.EnumerateFiles(SourceFileMask)
                 .OrderBy(f =>

@@ -90,18 +90,14 @@ namespace WWFOC
         {
             lock (_output)
             {
-                SelectedIndex = Math.Min(Math.Max(SelectedIndex + Math.Sign(e.Delta), 0), _output.Count);
+                SelectedIndex = Math.Min(Math.Max(SelectedIndex + Math.Sign(e.Delta), 0), _output.Count-1);
             }
             for (int i = 0; i < listBox1.Items.Count; i++) //hiba, amikor a legaljára görgetünk
             {
                 if (listBox1.Items[i].ToString()==_output[SelectedIndex].Title)
                 {
                     listBox1.SelectedIndex = i;
-                    tabViewer.SelectedTab.BackColor = Color.FromArgb(114, 25, 40);
-                }
-                else
-                {
-                    tabViewer.SelectedTab.BackColor = Color.White;
+                    
                 }
             }
 
@@ -269,8 +265,9 @@ namespace WWFOC
 
         private void PnlButtonsAlign()
         {
-            int MainWidth = this.Width - panel1.Width;
-            pnl_Buttons.Left = (MainWidth / 2) - (pnl_Buttons.Width / 2);
+            //pnl_Buttons.Left = (tabViewer.Width / 2) - (pnl_Buttons.Width/2);
+
+            pnl_Buttons.Left = ((this.Width+panel1.Width) / 2) - (pnl_Buttons.Width / 2);
         }
 
         private void button1_Click(object sender, EventArgs e)

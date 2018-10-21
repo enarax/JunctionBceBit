@@ -178,7 +178,7 @@
             this.btn_Positive.Font = new System.Drawing.Font("Segoe UI Emoji", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Positive.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
             this.btn_Positive.Image = ((System.Drawing.Image)(resources.GetObject("btn_Positive.Image")));
-            this.btn_Positive.Location = new System.Drawing.Point(89, 9);
+            this.btn_Positive.Location = new System.Drawing.Point(136, 9);
             this.btn_Positive.Name = "btn_Positive";
             this.btn_Positive.Size = new System.Drawing.Size(55, 55);
             this.btn_Positive.TabIndex = 10;
@@ -232,7 +232,7 @@
             this.pnl_Buttons.Controls.Add(this.btn_Positive);
             this.pnl_Buttons.Location = new System.Drawing.Point(402, 639);
             this.pnl_Buttons.Name = "pnl_Buttons";
-            this.pnl_Buttons.Size = new System.Drawing.Size(150, 73);
+            this.pnl_Buttons.Size = new System.Drawing.Size(196, 73);
             this.pnl_Buttons.TabIndex = 13;
             // 
             // button1

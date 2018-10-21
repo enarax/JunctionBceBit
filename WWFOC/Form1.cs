@@ -24,7 +24,19 @@ namespace WWFOC
 
         public int SelectedIndex { get; set; }
         private readonly List<ImageProcessorOutput> _output = new List<ImageProcessorOutput>(); // protected by lock(_output)
-        
+
+        #region Move
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+
+        #endregion
         
         public Form1(string Path)
         {
@@ -37,8 +49,10 @@ namespace WWFOC
             Load += OnLoad;
             
             this.MouseWheel += OnMouseWheel;
+            this.MouseDown += OnMouseDown;
             buttonDebug.Click += ButtonDebugOnClick;
         }
+
 
         private async void ButtonDebugOnClick(object sender, EventArgs e)
         {
@@ -55,6 +69,16 @@ namespace WWFOC
                 ip.Process();
             }
             
+        }
+        
+        
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
         }
 
         private void OnMouseWheel(object sender, MouseEventArgs e)
@@ -165,7 +189,6 @@ namespace WWFOC
                     {
 
                         _output.Add(result);
-                        string title = result.SourceFile.Name;
                         listBox1.Items.Add(result);
                         Pos = listBox1.Items.Count;
                     }

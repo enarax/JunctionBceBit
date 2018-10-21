@@ -170,7 +170,6 @@ namespace WWFOC
                         {
                             ImageProcessor ip = new ImageProcessor(original);
                             var result = ip.Process();
-                            result.Title = file.Name;
                             result.SourceFile = file;
                             return result;
                         }

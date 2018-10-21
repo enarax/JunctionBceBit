@@ -7,9 +7,32 @@ namespace WWFOC
 {
     public class ImageProcessorOutput
     {
+        public ImageProcessorOutput()
+        {
+        }
+
         public FileInfo SourceFile { get; set; }
-        
-        public string Title { get; set; }
+
+        public string Title
+        {
+            get
+            {
+                string decisionPrefix = "";
+                if (UserDecision == true)
+                {
+                    decisionPrefix = "✔ ";
+                }
+                else if (UserDecision == false)
+                {
+                    decisionPrefix = "✘ ";
+                }
+                else
+                {
+                    decisionPrefix = "  ";
+                }
+                return $"{decisionPrefix}{SourceFile.Name}";
+            }
+        }
 
         public IReadOnlyList<ImageOutput> Images { get; set; }
 
@@ -35,20 +58,7 @@ namespace WWFOC
 
         public override string ToString()
         {
-            string decisionPrefix = "";
-            if (UserDecision == true)
-            {
-                decisionPrefix = "✔ ";
-            }
-            else if (UserDecision == false)
-            {
-                decisionPrefix = "✘ ";
-            }
-            else
-            {
-                decisionPrefix = "  ";
-            }
-            return $"{decisionPrefix}{SourceFile.Name}";
+            return Title;
         }
 
         private static double GetDistance(double x1, double y1, double x2, double y2)

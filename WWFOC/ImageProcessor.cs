@@ -37,7 +37,6 @@ namespace WWFOC
             return new ImageProcessorOutput()
             {
                 Images = CreateOutputs(),
-                Title = "Title",
                 Targets = _targets
             };
         }

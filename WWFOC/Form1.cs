@@ -181,8 +181,6 @@ namespace WWFOC
                     });
 
                 }).ToList();
-            int Pos = 0;
-            
             foreach (var resultTask in resultTasks)
             {
                 var result = await resultTask;
@@ -194,10 +192,8 @@ namespace WWFOC
                     {
 
                         _output.Add(result);
-                        Pos = listBox1.Items.Count;
                     }
-                    lbl_OoO.Text = $"{Pos}/{_output.Count}";
-                        
+                    UpdateStatLabels();
                     if (resultIndex == SelectedIndex)
                     {
                         needRefresh = true;
@@ -210,6 +206,18 @@ namespace WWFOC
             }
         }
         
+        
+
+        private void UpdateStatLabels()
+        {
+            lock (_output)
+            {
+                int totalCount = _output.Count;
+                int checkedCount = _output.Count(o => o.UserDecision != null);
+                lbl_OoO.Text = $@"{checkedCount}/{totalCount}";
+                lbl_Perc.Text = Math.Round((checkedCount / (double)totalCount) * 100) + " %";
+            }
+        }
 
         //Eseménykiszolgálók
 
@@ -225,7 +233,7 @@ namespace WWFOC
 
         private void listBox1_ControlAdded(object sender, ControlEventArgs e)
         {
-            lbl_Perc.Text = ((listBox1.Items.Count / _output.Count) * 100).ToString() + " %";
+            UpdateStatLabels();
         }
 
         private void btn_Positive_Click(object sender, EventArgs e)
@@ -237,9 +245,11 @@ namespace WWFOC
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
-            SelectedIndex = listBox1.SelectedIndex;
-            RefreshView();
+            if (listBox1.SelectedIndex >= 0)
+            {
+                SelectedIndex = listBox1.SelectedIndex;
+                RefreshView();
+            }
             
         }
 

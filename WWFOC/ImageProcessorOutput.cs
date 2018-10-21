@@ -9,7 +9,7 @@ namespace WWFOC
 {
     public class ImageProcessorOutput : INotifyPropertyChanged
     {
-        private bool? _userDecision = true;
+        private bool? _userDecision;
 
         #region INotify
 

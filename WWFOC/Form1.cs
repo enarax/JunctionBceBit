@@ -234,9 +234,11 @@ namespace WWFOC
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
-            SelectedIndex = listBox1.SelectedIndex;
-            RefreshView();
+            if (listBox1.SelectedIndex >= 0)
+            {
+                SelectedIndex = listBox1.SelectedIndex;
+                RefreshView();
+            }
             
         }
 

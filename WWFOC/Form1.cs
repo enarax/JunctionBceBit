@@ -166,7 +166,7 @@ namespace WWFOC
 
                         _output.Add(result);
                         string title = result.SourceFile.Name;
-                        listBox1.Items.Add(title);
+                        listBox1.Items.Add(result);
                         Pos = listBox1.Items.Count;
                     }
                     lbl_OoO.Text = $"{Pos}/{_output.Count}";
@@ -181,7 +181,6 @@ namespace WWFOC
                     RefreshView();
                 }
             }
-
         }
         
 
@@ -204,7 +203,9 @@ namespace WWFOC
 
         private void btn_Positive_Click(object sender, EventArgs e)
         {
-            listBox1.Items.Remove(listBox1.SelectedItem);
+            var x = (ImageProcessorOutput)listBox1.SelectedItem;
+            x.UserDecision = true;
+            listBox1.Refresh();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)

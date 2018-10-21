@@ -17,7 +17,7 @@ namespace WWFOC
 
         public bool Positive => Targets.Any();
 
-        public bool? UserDecision { get; set; } = true;
+        public bool? UserDecision { get; set; }
 
         public bool SignificantlyDifferentFrom(ImageProcessorOutput b)
         {
@@ -39,6 +39,14 @@ namespace WWFOC
             if (UserDecision == true)
             {
                 decisionPrefix = "✔ ";
+            }
+            else if (UserDecision == false)
+            {
+                decisionPrefix = "✘ ";
+            }
+            else
+            {
+                decisionPrefix = "  ";
             }
             return $"{decisionPrefix}{SourceFile.Name}";
         }

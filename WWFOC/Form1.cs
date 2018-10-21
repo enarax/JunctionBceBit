@@ -166,12 +166,14 @@ namespace WWFOC
                     if (result.Positive && (resultIndex == 0 || result.SignificantlyDifferentFrom(_output[resultIndex-1])))
                     {
 
+                        _output.Add(result);
+                        System.Drawing.Image thumbnail = result.Images.Last().Bitmap;
                         string title = result.SourceFile.Name;
                         listBox1.Items.Add(title);
                         Pos = listBox1.Items.Count;                   
                     }
                     lbl_OoO.Text = $"{Pos}/{Total}";
-                    
+                        
                     if (resultIndex == SelectedIndex)
                     {
                         needRefresh = true;

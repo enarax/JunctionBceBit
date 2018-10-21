@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,8 +23,20 @@ namespace WWFOC
         public int DetectionParam3 { get; set; } = 0;
 
         public int SelectedIndex { get; set; }
-        private readonly List<ImageProcessorOutput> _output = new List<ImageProcessorOutput>(); // protected by lock(_output)
-        
+        private readonly IList<ImageProcessorOutput> _output = new BindingList<ImageProcessorOutput>(); // protected by lock(_output)
+
+        #region Move
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+
+        #endregion
         
         public Form1(string Path)
         {
@@ -34,12 +46,17 @@ namespace WWFOC
             lbl_Filename.Hide();
             tabViewer.Hide();
             SourcePath = Path;
+
+            listBox1.DataSource = _output;
+            listBox1.DisplayMember = "Title";
            
             Load += OnLoad;
             
             this.MouseWheel += OnMouseWheel;
+            this.MouseDown += OnMouseDown;
             buttonDebug.Click += ButtonDebugOnClick;
         }
+
 
         private async void ButtonDebugOnClick(object sender, EventArgs e)
         {
@@ -56,6 +73,16 @@ namespace WWFOC
                 ip.Process();
             }
             
+        }
+        
+        
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
         }
 
         private void OnMouseWheel(object sender, MouseEventArgs e)
@@ -148,7 +175,6 @@ namespace WWFOC
                         {
                             ImageProcessor ip = new ImageProcessor(original);
                             var result = ip.Process();
-                            result.Title = file.Name;
                             result.SourceFile = file;
                             return result;
                         }
@@ -168,8 +194,6 @@ namespace WWFOC
                     {
 
                         _output.Add(result);
-                        string title = result.SourceFile.Name;
-                        listBox1.Items.Add(result);
                         Pos = listBox1.Items.Count;
                     }
                     lbl_OoO.Text = $"{Pos}/{_output.Count}";
@@ -213,25 +237,9 @@ namespace WWFOC
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int KivIndex = 0;
-            lock (_output)
-            {
-               
-                foreach (var image in _output)
-                {
-                    if (image.Title == listBox1.SelectedItem.ToString())
-                    {
-                        SelectedIndex = KivIndex;
-                        
-                        lbl_Filename.Text = listBox1.SelectedItem.ToString();
-                    }
-                    else
-                    {
-                        KivIndex++;
-                    }
-                }
-                RefreshView();
-            }
+            
+            SelectedIndex = listBox1.SelectedIndex;
+            RefreshView();
             
         }
 

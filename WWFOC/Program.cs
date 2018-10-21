@@ -16,7 +16,7 @@ namespace WWFOC
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(@"C:\Users\Benke Sándor\Documents\Junction\Dataset\386801\"));
+            Application.Run(new Main());
         }
     }
 }

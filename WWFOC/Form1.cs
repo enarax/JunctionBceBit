@@ -113,11 +113,12 @@ namespace WWFOC
                             ((PictureBox) tabViewer.TabPages[i].Controls[0]).Image =
                                 currentImage.Bitmap;
                         }
+                        
+                        lbl_Filename.Text = _output[SelectedIndex].Title;
+                        lbl_Filename.Show();
                     }
                 }
             });
-            lbl_Filename.Text = _output[SelectedIndex].Title;
-            lbl_Filename.Show();
         }
 
         private async void OnLoad(object sender, EventArgs e)
@@ -152,7 +153,6 @@ namespace WWFOC
                     });
 
                 }).ToList();
-            int Total = 0;
             int Pos = 0;
             foreach (var resultTask in resultTasks)
             {
@@ -161,18 +161,15 @@ namespace WWFOC
                 lock (_output)
                 {
                     int resultIndex = _output.Count;
-                    _output.Add(result);
-                    Total = _output.Count;
                     if (result.Positive && (resultIndex == 0 || result.SignificantlyDifferentFrom(_output[resultIndex-1])))
                     {
 
                         _output.Add(result);
-                        System.Drawing.Image thumbnail = result.Images.Last().Bitmap;
                         string title = result.SourceFile.Name;
                         listBox1.Items.Add(title);
-                        Pos = listBox1.Items.Count;                   
+                        Pos = listBox1.Items.Count;
                     }
-                    lbl_OoO.Text = $"{Pos}/{Total}";
+                    lbl_OoO.Text = $"{Pos}/{_output.Count}";
                         
                     if (resultIndex == SelectedIndex)
                     {

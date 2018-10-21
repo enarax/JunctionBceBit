@@ -90,7 +90,7 @@ namespace WWFOC
         {
             lock (_output)
             {
-                SelectedIndex = Math.Min(Math.Max(SelectedIndex + Math.Sign(e.Delta), 0), _output.Count);
+                SelectedIndex = Math.Min(Math.Max(SelectedIndex + Math.Sign(e.Delta), 0), _output.Count - 1);
             }
             for (int i = 0; i < listBox1.Items.Count; i++) //hiba, amikor a legaljára görgetünk
             {

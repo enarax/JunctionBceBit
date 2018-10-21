@@ -17,6 +17,8 @@ namespace WWFOC
 
         public bool Positive => Targets.Any();
 
+        public bool? UserDecision { get; set; } = true;
+
         public bool SignificantlyDifferentFrom(ImageProcessorOutput b)
         {
             const int treshold = 10;
@@ -30,7 +32,17 @@ namespace WWFOC
             return false;
 
         }
-        
+
+        public override string ToString()
+        {
+            string decisionPrefix = "";
+            if (UserDecision == true)
+            {
+                decisionPrefix = "✔ ";
+            }
+            return $"{decisionPrefix}{SourceFile.Name}";
+        }
+
         private static double GetDistance(double x1, double y1, double x2, double y2)
         {
             return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));

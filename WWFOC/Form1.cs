@@ -53,8 +53,10 @@ namespace WWFOC
            
             Load += OnLoad;
             
-            this.MouseWheel += OnMouseWheel;
-            this.MouseDown += OnMouseDown;
+            MouseWheel += OnMouseWheel;
+            MouseDown += OnMouseDown;
+            panel1.MouseDown += OnMouseDown;
+            panel2.MouseDown += OnMouseDown;
             buttonDebug.Click += ButtonDebugOnClick;
         }
 
@@ -100,45 +102,42 @@ namespace WWFOC
       
         public void RefreshView()
         {
-            Invoke((MethodInvoker) delegate
+            lock (_output)
             {
-                lock (_output)
+                if (_output.Count > SelectedIndex)
                 {
-                    if (_output.Count > SelectedIndex)
+                    var selectedResult = _output[SelectedIndex];
+                    this.Text = selectedResult.Title;
+                    for (int i = 0; i < selectedResult.Images.Count; i++)
                     {
-                        var selectedResult = _output[SelectedIndex];
-                        this.Text = selectedResult.Title;
-                        for (int i = 0; i < selectedResult.Images.Count; i++)
+                        var currentImage = selectedResult.Images[i];
+                        if (tabViewer.TabCount <= i)
                         {
-                            var currentImage = selectedResult.Images[i];
-                            if (tabViewer.TabCount <= i)
-                            {
-                                tabViewer.TabPages.Add(new TabPage(currentImage.Title));
-                            }
-                            else
-                            {
-                                tabViewer.TabPages[i].Text = currentImage.Title;
-                            }
-
-                            if (tabViewer.TabPages[i].Controls.Count < 1)
-                            {
-                                tabViewer.TabPages[i].Controls.Add(new PictureBox()
-                                {
-                                    Dock = DockStyle.Fill, 
-                                    SizeMode = PictureBoxSizeMode.Zoom
-                                });
-                            }
-
-                            ((PictureBox) tabViewer.TabPages[i].Controls[0]).Image =
-                                currentImage.Bitmap;
+                            tabViewer.TabPages.Add(new TabPage(currentImage.Title));
                         }
-                        
-                        lbl_Filename.Text = _output[SelectedIndex].Title;
-                        lbl_Filename.Show();
-                        tabViewer.Show();
+                        else
+                        {
+                            tabViewer.TabPages[i].Text = currentImage.Title;
+                        }
+
+                        if (tabViewer.TabPages[i].Controls.Count < 1)
+                        {
+                            tabViewer.TabPages[i].Controls.Add(new PictureBox()
+                            {
+                                Dock = DockStyle.Fill,
+                                SizeMode = PictureBoxSizeMode.Zoom
+                            });
+                        }
+
+                        ((PictureBox) tabViewer.TabPages[i].Controls[0]).Image =
+                            currentImage.Bitmap;
                     }
+
+                    lbl_Filename.Text = _output[SelectedIndex].Title;
+                    lbl_Filename.Show();
+                    tabViewer.Show();
                 }
-            });
+            }
         }
 
         private async void OnLoad(object sender, EventArgs e)
@@ -228,21 +227,6 @@ namespace WWFOC
             UpdateStatLabels();
         }
 
-        private void btn_Positive_Click(object sender, EventArgs e)
-        {
-            var x = (ImageProcessorOutput)listBox1.SelectedItem;
-            x.UserDecision = true;
-            for (int i = 0; i < listBox1.Items.Count; i++)
-            {
-                var Next = (ImageProcessorOutput)listBox1.Items[i];
-                if (Next.UserDecision == null)
-                {
-                    listBox1.SelectedItem=listBox1.Items[i];
-                    break;
-                }
-            }
-        }
-
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex >= 0)
@@ -274,12 +258,27 @@ namespace WWFOC
         {
             var x = (ImageProcessorOutput)listBox1.SelectedItem;
             x.UserDecision = false;
-            for (int i = 0; i < listBox1.Items.Count; i++)
+            UpdateStatLabels();
+            foreach (ImageProcessorOutput next in listBox1.Items)
             {
-                var Next = (ImageProcessorOutput)listBox1.Items[i];
-                if (Next.UserDecision == null)
+                if (next.UserDecision == null)
                 {
-                    listBox1.SelectedItem = listBox1.Items[i];
+                    listBox1.SelectedItem=next;
+                    break;
+                }
+            }
+        }
+
+        private void btn_Positive_Click(object sender, EventArgs e)
+        {
+            var x = (ImageProcessorOutput)listBox1.SelectedItem;
+            x.UserDecision = true;
+            UpdateStatLabels();
+            foreach (ImageProcessorOutput next in listBox1.Items)
+            {
+                if (next.UserDecision == null)
+                {
+                    listBox1.SelectedItem=next;
                     break;
                 }
             }

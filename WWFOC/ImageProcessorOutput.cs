@@ -1,15 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace WWFOC
 {
-    public class ImageProcessorOutput
+    public class ImageProcessorOutput : INotifyPropertyChanged
     {
-        public ImageProcessorOutput()
+        private bool? _userDecision = true;
+
+        #region INotify
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));  
         }
+        
+        #endregion
 
         public FileInfo SourceFile { get; set; }
 
@@ -40,7 +51,16 @@ namespace WWFOC
 
         public bool Positive => Targets.Any();
 
-        public bool? UserDecision { get; set; }
+        public bool? UserDecision
+        {
+            get => _userDecision;
+            set
+            {
+                _userDecision = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(Title));
+            }
+        }
 
         public bool SignificantlyDifferentFrom(ImageProcessorOutput b)
         {

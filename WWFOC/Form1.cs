@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace WWFOC
         public int DetectionParam3 { get; set; } = 0;
 
         public int SelectedIndex { get; set; }
-        private readonly List<ImageProcessorOutput> _output = new List<ImageProcessorOutput>(); // protected by lock(_output)
+        private readonly IList<ImageProcessorOutput> _output = new BindingList<ImageProcessorOutput>(); // protected by lock(_output)
 
         #region Move
 
@@ -45,6 +45,9 @@ namespace WWFOC
             buttonDebug.Hide();
             lbl_Filename.Hide();
             SourcePath = Path;
+
+            listBox1.DataSource = _output;
+            listBox1.DisplayMember = "Title";
            
             Load += OnLoad;
             
@@ -188,7 +191,6 @@ namespace WWFOC
                     {
 
                         _output.Add(result);
-                        listBox1.Items.Add(result);
                         Pos = listBox1.Items.Count;
                     }
                     lbl_OoO.Text = $"{Pos}/{_output.Count}";

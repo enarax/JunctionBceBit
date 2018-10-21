@@ -35,12 +35,18 @@
             this.buttonDebug = new System.Windows.Forms.Button();
             this.btn_close = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btn_Positive = new System.Windows.Forms.Button();
+            this.btn_Negativ = new System.Windows.Forms.Button();
+            this.lbl_OoO = new System.Windows.Forms.Label();
+            this.lbl_Perc = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.lbl_Filename = new System.Windows.Forms.Label();
+            this.pnl_Buttons = new System.Windows.Forms.Panel();
             this.tabViewer.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.pnl_Buttons.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabViewer
@@ -50,11 +56,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabViewer.Controls.Add(this.tabPage1);
             this.tabViewer.Controls.Add(this.tabPage2);
-            this.tabViewer.Location = new System.Drawing.Point(402, 104);
+            this.tabViewer.Location = new System.Drawing.Point(345, 104);
             this.tabViewer.Margin = new System.Windows.Forms.Padding(4);
             this.tabViewer.Name = "tabViewer";
             this.tabViewer.SelectedIndex = 0;
-            this.tabViewer.Size = new System.Drawing.Size(764, 528);
+            this.tabViewer.Size = new System.Drawing.Size(823, 528);
             this.tabViewer.TabIndex = 4;
             // 
             // tabPage1
@@ -63,7 +69,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage1.Size = new System.Drawing.Size(756, 499);
+            this.tabPage1.Size = new System.Drawing.Size(815, 499);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -74,13 +80,14 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage2.Size = new System.Drawing.Size(756, 499);
+            this.tabPage2.Size = new System.Drawing.Size(815, 499);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // buttonDebug
             // 
+            this.buttonDebug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDebug.Location = new System.Drawing.Point(1062, 659);
             this.buttonDebug.Margin = new System.Windows.Forms.Padding(4);
             this.buttonDebug.Name = "buttonDebug";
@@ -91,6 +98,7 @@
             // 
             // btn_close
             // 
+            this.btn_close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_close.FlatAppearance.BorderSize = 0;
             this.btn_close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_close.Font = new System.Drawing.Font("Segoe UI Black", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -106,12 +114,28 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
+            this.panel1.Controls.Add(this.lbl_Perc);
+            this.panel1.Controls.Add(this.lbl_OoO);
             this.panel1.Controls.Add(this.listBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(333, 724);
             this.panel1.TabIndex = 8;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBox1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 23;
+            this.listBox1.Location = new System.Drawing.Point(12, 141);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(306, 556);
+            this.listBox1.TabIndex = 0;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.listBox1.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.listBox1_ControlAdded);
             // 
             // panel2
             // 
@@ -122,42 +146,92 @@
             this.panel2.Size = new System.Drawing.Size(861, 21);
             this.panel2.TabIndex = 9;
             // 
-            // button2
+            // btn_Positive
             // 
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Segoe UI Emoji", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(803, 639);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(55, 55);
-            this.button2.TabIndex = 10;
-            this.button2.UseVisualStyleBackColor = true;
+            this.btn_Positive.FlatAppearance.BorderSize = 0;
+            this.btn_Positive.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Positive.Font = new System.Drawing.Font("Segoe UI Emoji", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Positive.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
+            this.btn_Positive.Image = ((System.Drawing.Image)(resources.GetObject("btn_Positive.Image")));
+            this.btn_Positive.Location = new System.Drawing.Point(89, 9);
+            this.btn_Positive.Name = "btn_Positive";
+            this.btn_Positive.Size = new System.Drawing.Size(55, 55);
+            this.btn_Positive.TabIndex = 10;
+            this.btn_Positive.UseVisualStyleBackColor = true;
+            this.btn_Positive.Click += new System.EventHandler(this.btn_Positive_Click);
             // 
-            // button1
+            // btn_Negativ
             // 
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Segoe UI Emoji", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(701, 639);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(55, 55);
-            this.button1.TabIndex = 11;
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_Negativ.FlatAppearance.BorderSize = 0;
+            this.btn_Negativ.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Negativ.Font = new System.Drawing.Font("Segoe UI Emoji", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Negativ.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
+            this.btn_Negativ.Image = ((System.Drawing.Image)(resources.GetObject("btn_Negativ.Image")));
+            this.btn_Negativ.Location = new System.Drawing.Point(10, 8);
+            this.btn_Negativ.Name = "btn_Negativ";
+            this.btn_Negativ.Size = new System.Drawing.Size(55, 55);
+            this.btn_Negativ.TabIndex = 11;
+            this.btn_Negativ.UseVisualStyleBackColor = true;
             // 
-            // listBox1
+            // lbl_OoO
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(12, 141);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(306, 484);
-            this.listBox1.TabIndex = 0;
+            this.lbl_OoO.AutoSize = true;
+            this.lbl_OoO.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbl_OoO.ForeColor = System.Drawing.Color.White;
+            this.lbl_OoO.Location = new System.Drawing.Point(192, 92);
+            this.lbl_OoO.Name = "lbl_OoO";
+            this.lbl_OoO.Size = new System.Drawing.Size(69, 46);
+            this.lbl_OoO.TabIndex = 1;
+            this.lbl_OoO.Text = "0/0";
+            this.lbl_OoO.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lbl_Perc
+            // 
+            this.lbl_Perc.AutoSize = true;
+            this.lbl_Perc.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lbl_Perc.ForeColor = System.Drawing.Color.White;
+            this.lbl_Perc.Location = new System.Drawing.Point(12, 92);
+            this.lbl_Perc.Name = "lbl_Perc";
+            this.lbl_Perc.Size = new System.Drawing.Size(84, 46);
+            this.lbl_Perc.TabIndex = 2;
+            this.lbl_Perc.Text = "30%";
+            this.lbl_Perc.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("Segoe UI Black", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
+            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
+            this.button3.Location = new System.Drawing.Point(1092, 22);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(47, 36);
+            this.button3.TabIndex = 12;
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // lbl_Filename
+            // 
+            this.lbl_Filename.AutoSize = true;
+            this.lbl_Filename.Font = new System.Drawing.Font("Segoe UI Emoji", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Filename.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(69)))), ((int)(((byte)(127)))));
+            this.lbl_Filename.Location = new System.Drawing.Point(339, 24);
+            this.lbl_Filename.Name = "lbl_Filename";
+            this.lbl_Filename.Size = new System.Drawing.Size(169, 32);
+            this.lbl_Filename.TabIndex = 3;
+            this.lbl_Filename.Text = "_filename.dcm";
+            // 
+            // pnl_Buttons
+            // 
+            this.pnl_Buttons.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.pnl_Buttons.Controls.Add(this.btn_Negativ);
+            this.pnl_Buttons.Controls.Add(this.btn_Positive);
+            this.pnl_Buttons.Location = new System.Drawing.Point(402, 639);
+            this.pnl_Buttons.Name = "pnl_Buttons";
+            this.pnl_Buttons.Size = new System.Drawing.Size(150, 73);
+            this.pnl_Buttons.TabIndex = 13;
             // 
             // Form1
             // 
@@ -165,8 +239,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1194, 724);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.pnl_Buttons);
+            this.Controls.Add(this.lbl_Filename);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btn_close);
@@ -177,9 +252,13 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.tabViewer.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.pnl_Buttons.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -191,9 +270,14 @@
         private System.Windows.Forms.Button btn_close;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_Positive;
+        private System.Windows.Forms.Button btn_Negativ;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Label lbl_Perc;
+        private System.Windows.Forms.Label lbl_OoO;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label lbl_Filename;
+        private System.Windows.Forms.Panel pnl_Buttons;
     }
 }
 

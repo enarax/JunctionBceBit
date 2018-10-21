@@ -29,6 +29,9 @@ namespace WWFOC
         public Form1(string Path)
         {
             InitializeComponent();
+            PnlButonsAlign();
+            buttonDebug.Hide();
+            lbl_Filename.Hide();
             SourcePath = Path;
            
             Load += OnLoad;
@@ -60,10 +63,22 @@ namespace WWFOC
             {
                 SelectedIndex = Math.Min(Math.Max(SelectedIndex + Math.Sign(e.Delta), 0), _output.Count);
             }
+            for (int i = 0; i < listBox1.Items.Count; i++) //hiba, amikor a legaljára görgetünk
+            {
+                if (listBox1.Items[i].ToString()==_output[SelectedIndex].Title)
+                {
+                    listBox1.SelectedIndex = i;
+                    tabViewer.SelectedTab.BackColor = Color.FromArgb(114, 25, 40);
+                }
+                else
+                {
+                    tabViewer.SelectedTab.BackColor = Color.White;
+                }
+            }
+
             RefreshView();
         }
-
-
+      
         public void RefreshView()
         {
             Invoke((MethodInvoker) delegate
@@ -102,6 +117,8 @@ namespace WWFOC
                     }
                 }
             });
+            lbl_Filename.Text = _output[SelectedIndex].Title;
+            lbl_Filename.Show();
         }
 
         private async void OnLoad(object sender, EventArgs e)
@@ -111,6 +128,7 @@ namespace WWFOC
 
         private async Task UpdateImageAsync()
         {
+
             var sourceDir = new DirectoryInfo(SourcePath);
             IEnumerable<Task<ImageProcessorOutput>> resultTasks = sourceDir.EnumerateFiles(SourceFileMask)
                 .OrderBy(f =>
@@ -135,7 +153,8 @@ namespace WWFOC
                     });
 
                 }).ToList();
-            int szam = 0;
+            int Total = 0;
+            int Pos = 0;
             foreach (var resultTask in resultTasks)
             {
                 var result = await resultTask;
@@ -143,18 +162,16 @@ namespace WWFOC
                 lock (_output)
                 {
                     _output.Add(result);
+                    Total = _output.Count;
                     if (result.Positive)
                     {
-                        System.Drawing.Image thumbnail = result.Images.Last().Bitmap;
+
                         string title = result.SourceFile.Name;
-                        
-                        Thumbnail thbn = new Thumbnail(thumbnail, title);
-                        
-                        thbn.Top = szam * thbn.Height;
-                        szam++;
                         listBox1.Items.Add(title);
-                        //pnl_Thbn.Controls.Add(thbn);
+                        Pos = listBox1.Items.Count;                   
                     }
+                    lbl_OoO.Text = $"{Pos}/{Total}";
+                    
                     if (_output.Count-1 == SelectedIndex)
                     {
                         needRefresh = true;
@@ -167,24 +184,63 @@ namespace WWFOC
             }
 
         }
+        
 
-        private void LoadThumbs()
-        {
-            
-            foreach (ImageProcessorOutput positiveOutput in _output.Where(o => o.Positive))
-            {
-                System.Drawing.Image thumbnail = positiveOutput.Images.Last().Bitmap;
-                string title = positiveOutput.SourceFile.Name;
-                Thumbnail thbn = new Thumbnail(thumbnail, title);
-                //pnl_Thbn.Controls.Add(thbn);
-                //thbn.Top = index * thbn.Height;
-            }
-
-        }
+        //Eseménykiszolgálók
 
         private void btn_close_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Maximized;
+        }
+
+        private void listBox1_ControlAdded(object sender, ControlEventArgs e)
+        {
+            lbl_Perc.Text = ((listBox1.Items.Count / _output.Count) * 100).ToString() + " %";
+        }
+
+        private void btn_Positive_Click(object sender, EventArgs e)
+        {
+            listBox1.Items.Remove(listBox1.SelectedItem);
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int KivIndex = 0;
+            lock (_output)
+            {
+               
+                foreach (var image in _output)
+                {
+                    if (image.Title == listBox1.SelectedItem.ToString())
+                    {
+                        SelectedIndex = KivIndex;
+                        
+                        lbl_Filename.Text = listBox1.SelectedItem.ToString();
+                    }
+                    else
+                    {
+                        KivIndex++;
+                    }
+                }
+                RefreshView();
+            }
+            
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            PnlButonsAlign();
+        }
+
+        private void PnlButonsAlign()
+        {
+            int MainWidth = this.Width - panel1.Width;
+            pnl_Buttons.Left = MainWidth / 2 - pnl_Buttons.Width / 2;
         }
     }
 }

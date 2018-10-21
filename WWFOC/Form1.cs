@@ -240,7 +240,15 @@ namespace WWFOC
         {
             var x = (ImageProcessorOutput)listBox1.SelectedItem;
             x.UserDecision = true;
-            listBox1.Refresh();
+            for (int i = 0; i < listBox1.Items.Count; i++)
+            {
+                var Next = (ImageProcessorOutput)listBox1.Items[i];
+                if (Next.UserDecision == null)
+                {
+                    listBox1.SelectedItem=listBox1.Items[i];
+                    break;
+                }
+            }
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -262,6 +270,26 @@ namespace WWFOC
         {
             int MainWidth = this.Width - panel1.Width;
             pnl_Buttons.Left = (MainWidth / 2) - (pnl_Buttons.Width / 2);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private void btn_Negativ_Click(object sender, EventArgs e)
+        {
+            var x = (ImageProcessorOutput)listBox1.SelectedItem;
+            x.UserDecision = false;
+            for (int i = 0; i < listBox1.Items.Count; i++)
+            {
+                var Next = (ImageProcessorOutput)listBox1.Items[i];
+                if (Next.UserDecision == null)
+                {
+                    listBox1.SelectedItem = listBox1.Items[i];
+                    break;
+                }
+            }
         }
     }
 }

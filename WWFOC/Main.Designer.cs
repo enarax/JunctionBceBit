@@ -56,7 +56,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(572, 58);
             this.label1.TabIndex = 1;
-            this.label1.Text = "A world with fear of cancer";
+            this.label1.Text = "A world without fear of cancer";
             // 
             // label2
             // 

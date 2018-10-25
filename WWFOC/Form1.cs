@@ -17,7 +17,7 @@ namespace WWFOC
 
         public string SourcePath { get; } //= @"C:\Users\Benke Sándor\Documents\Junction\Dataset\386801";
         public string SourceFileMask = "MR.*";
-
+        public List<ImageOutput> AllImages = new List<ImageOutput>();
 
         public int DetectionParam1 { get; set; } = 300;
         public int DetectionParam2 { get; set; } = 100;
@@ -51,7 +51,9 @@ namespace WWFOC
             listBox1.DataSource = _output;
             listBox1.DisplayMember = "Title";
             lbl_Perc.Hide();
-            lbl_OoO.Text = "Betöltés...";
+            lbl_OoO.Text = "Loading...";
+            label1.Hide();
+            label2.Hide();
             Load += OnLoad;
             
             this.MouseWheel += OnMouseWheel;
@@ -106,10 +108,36 @@ namespace WWFOC
                 if (_output.Count > SelectedIndex)
                 {
                     var selectedResult = _output[SelectedIndex];
+                    
+                    
                     this.Text = selectedResult.Title;
                     for (int i = 0; i < selectedResult.Images.Count; i++)
                     {
                         var currentImage = selectedResult.Images[i];
+                        for (int j = 0; j < AllImages.Count(); j++)
+                        {
+                            if (AllImages[j].Title==selectedResult.Title)
+                            {
+                                try
+                                {
+                                    var prevImage = AllImages[j-1];
+                                    pbx_Before.Image = prevImage.Bitmap;
+                                }
+                                catch (Exception) { pbx_Before.Image = null; }//Checks if Image is first in the List 
+
+                                try
+                                {
+                                    var nextImage = AllImages[j + 1];
+                                    pbx_After.Image = nextImage.Bitmap;
+                                }
+                                catch (Exception) { pbx_After.Image = null; } //Checks if Image is last in the List
+
+                            }
+                        }
+                        
+                        
+                        
+
                         if (tabViewer.TabCount <= i)
                         {
                             tabViewer.TabPages.Add(new TabPage(currentImage.Title));
@@ -131,11 +159,15 @@ namespace WWFOC
 
                         ((PictureBox) tabViewer.TabPages[i].Controls[0]).Image =
                             currentImage.Bitmap;
+
+                        
                     }
                     
                     lbl_Filename.Text = _output[SelectedIndex].Title;
                     lbl_Filename.Show();
                     tabViewer.Show();
+                    label1.Show();
+                    label2.Show();
                    
                 }
             }
@@ -167,12 +199,16 @@ namespace WWFOC
                             Bitmap original = iimage.AsClonedBitmap();
                             ImageProcessor ip = new ImageProcessor(original);
                             var result = ip.Process();
+
                             result.SourceFile = file;
+                            ImageOutput io = new ImageOutput(result.Images[1].Bitmap, result.Title);
+                            AllImages.Add(io); //Adding all images to List 
                             return result;
                         }
                     });
 
                 }).ToList();
+
             foreach (var resultTask in resultTasks)
             {
                 var result = await resultTask;
@@ -182,7 +218,6 @@ namespace WWFOC
                     int resultIndex = _output.Count;
                     if (result.Positive && (resultIndex == 0 || result.SignificantlyDifferentFrom(_output[resultIndex-1])))
                     {
-
                         _output.Add(result);
                     }
                     UpdateStatLabels();
@@ -232,7 +267,15 @@ namespace WWFOC
 
         private void button3_Click(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Maximized;
+            
+            if (WindowState == FormWindowState.Maximized)
+            {
+                WindowState = FormWindowState.Normal;
+            }
+            else
+            {
+                WindowState = FormWindowState.Maximized;
+            }
         }
 
         private void listBox1_ControlAdded(object sender, ControlEventArgs e)
